@@ -40,188 +40,184 @@ export default function Home() {
 
   const discount = (orig, price) => Math.round((orig - price) / orig * 100)
 
-  const s = {
-    topbar: { background: '#111', borderBottom: '1px solid #222', padding: '6px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', color: '#888', flexWrap: 'wrap', gap: '4px' },
-    topLeft: { display: 'flex', gap: '16px', flexWrap: 'wrap' },
-    topRight: { color: '#C9A84C', fontWeight: '600' },
-    nav: { background: '#0A0A0A', borderBottom: '1px solid #222', padding: '12px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', position: 'sticky', top: 0, zIndex: 100 },
-    logo: { fontSize: '22px', fontWeight: '700', color: '#C9A84C', fontFamily: 'Rajdhani, sans-serif', letterSpacing: '2px', whiteSpace: 'nowrap' },
-    searchBox: { flex: 1, maxWidth: '400px', display: 'flex', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', overflow: 'hidden' },
-    searchInput: { flex: 1, background: 'transparent', border: 'none', padding: '8px 14px', color: '#fff', fontSize: '13px', outline: 'none' },
-    searchBtn: { background: '#C9A84C', border: 'none', padding: '8px 14px', color: '#000', fontWeight: '700', fontSize: '13px' },
-    navRight: { display: 'flex', alignItems: 'center', gap: '12px' },
-    cartBtn: { background: '#C9A84C', color: '#000', border: 'none', borderRadius: '6px', padding: '8px 16px', fontWeight: '700', fontSize: '13px', whiteSpace: 'nowrap' },
-    menuBtn: { background: 'transparent', border: '1px solid #333', color: '#fff', borderRadius: '6px', padding: '8px 12px', fontSize: '18px', display: 'none' },
-    catNav: { background: '#111', borderBottom: '1px solid #222', padding: '0 20px', display: 'flex', gap: '0', overflowX: 'auto' },
-    catNavItem: { padding: '12px 16px', fontSize: '12px', color: '#999', whiteSpace: 'nowrap', borderBottom: '2px solid transparent', cursor: 'pointer', fontWeight: '500', letterSpacing: '0.5px' },
-    catNavItemActive: { padding: '12px 16px', fontSize: '12px', color: '#C9A84C', whiteSpace: 'nowrap', borderBottom: '2px solid #C9A84C', cursor: 'pointer', fontWeight: '600', letterSpacing: '0.5px' },
-    hero: { background: '#111', borderBottom: '1px solid #222', padding: '48px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '32px', flexWrap: 'wrap' },
-    heroBadge: { background: 'rgba(201,168,76,0.12)', border: '1px solid rgba(201,168,76,0.3)', color: '#C9A84C', fontSize: '11px', padding: '4px 14px', borderRadius: '2px', letterSpacing: '2px', display: 'inline-block', marginBottom: '16px', textTransform: 'uppercase' },
-    heroH1: { fontSize: '42px', fontWeight: '700', color: '#F0EDE8', lineHeight: '1.15', marginBottom: '14px', fontFamily: 'Rajdhani, sans-serif' },
-    heroP: { fontSize: '14px', color: '#888', lineHeight: '1.8', marginBottom: '24px', maxWidth: '420px' },
-    heroBtns: { display: 'flex', gap: '12px', flexWrap: 'wrap' },
-    btnPrimary: { background: '#C9A84C', color: '#000', border: 'none', borderRadius: '4px', padding: '13px 28px', fontWeight: '700', fontSize: '13px', letterSpacing: '1px', textTransform: 'uppercase' },
-    btnOutline: { background: 'transparent', color: '#C9A84C', border: '1px solid #C9A84C', borderRadius: '4px', padding: '13px 28px', fontWeight: '600', fontSize: '13px', letterSpacing: '1px', textTransform: 'uppercase' },
-    heroStats: { display: 'flex', gap: '32px', marginTop: '32px', flexWrap: 'wrap' },
-    heroStat: { textAlign: 'center' },
-    heroStatNum: { fontSize: '28px', fontWeight: '700', color: '#C9A84C', fontFamily: 'Rajdhani, sans-serif' },
-    heroStatLabel: { fontSize: '11px', color: '#666', letterSpacing: '1px', textTransform: 'uppercase' },
-    heroRight: { background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: '12px', padding: '28px', textAlign: 'center', minWidth: '200px' },
-    catSection: { padding: '32px 20px' },
-    sectionTitle: { fontSize: '22px', fontWeight: '700', color: '#F0EDE8', fontFamily: 'Rajdhani, sans-serif', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '1px' },
-    sectionSub: { fontSize: '12px', color: '#C9A84C', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '20px' },
-    catGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '12px' },
-    catCard: { background: '#111', border: '1px solid #222', borderRadius: '8px', padding: '16px 8px', textAlign: 'center', cursor: 'pointer', transition: 'border-color 0.2s' },
-    catCardEmoji: { fontSize: '28px', marginBottom: '8px' },
-    catCardName: { fontSize: '11px', color: '#C9A84C', fontWeight: '600', letterSpacing: '0.5px' },
-    productsSection: { padding: '0 20px 32px', background: '#0A0A0A' },
-    productsGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '16px' },
-    productCard: { background: '#111', border: '1px solid #222', borderRadius: '8px', overflow: 'hidden', position: 'relative' },
-    productImg: { background: '#1a1a1a', height: '130px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '48px', borderBottom: '1px solid #222', position: 'relative' },
-    productBadge: (tag) => ({ position: 'absolute', top: '8px', left: '8px', background: tag === 'HOT' ? '#e53e3e' : tag === 'NEW' ? '#38a169' : '#C9A84C', color: '#fff', fontSize: '9px', padding: '3px 8px', borderRadius: '2px', fontWeight: '700', letterSpacing: '1px' }),
-    discountBadge: { position: 'absolute', top: '8px', right: '8px', background: '#e53e3e', color: '#fff', fontSize: '9px', padding: '3px 8px', borderRadius: '2px', fontWeight: '700' },
-    productBody: { padding: '12px' },
-    productCat: { fontSize: '10px', color: '#C9A84C', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: '4px' },
-    productName: { fontSize: '13px', color: '#F0EDE8', fontWeight: '500', marginBottom: '8px', lineHeight: '1.4' },
-    productPriceRow: { display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', flexWrap: 'wrap' },
-    productPrice: { fontSize: '16px', color: '#C9A84C', fontWeight: '700', fontFamily: 'Rajdhani, sans-serif' },
-    productOrigPrice: { fontSize: '11px', color: '#555', textDecoration: 'line-through' },
-    productStock: (s) => ({ fontSize: '10px', color: s ? '#38a169' : '#e53e3e', marginBottom: '10px', letterSpacing: '0.5px' }),
-    addBtn: { width: '100%', background: 'transparent', color: '#C9A84C', border: '1px solid #C9A84C', borderRadius: '4px', padding: '8px', fontSize: '11px', fontWeight: '600', letterSpacing: '1px', textTransform: 'uppercase' },
-    whySection: { background: '#111', borderTop: '1px solid #222', borderBottom: '1px solid #222', padding: '40px 20px' },
-    whyGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '20px', marginTop: '24px' },
-    whyCard: { textAlign: 'center', padding: '20px 12px', background: '#0A0A0A', border: '1px solid #222', borderRadius: '8px' },
-    contactSection: { padding: '40px 20px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '32px', alignItems: 'center' },
-    contactBox: { background: '#111', border: '1px solid #222', borderRadius: '8px', overflow: 'hidden' },
-    contactRow: { display: 'flex', alignItems: 'center', gap: '14px', padding: '16px 20px', borderBottom: '1px solid #222' },
-    contactIcon: { width: '40px', height: '40px', background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.2)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', flexShrink: 0 },
-    footer: { background: '#060606', borderTop: '1px solid #1a1a1a', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' },
-  }
-
   return (
     <div style={{ minHeight: '100vh', background: '#0A0A0A' }}>
       <style>{`
+        @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:0.8} }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+        .float-anim { animation: float 4s ease-in-out infinite; }
         @media(max-width:768px){
-          .hero-content{flex-direction:column!important}
-          .hero-right{display:none!important}
-          .hero-h1{font-size:28px!important}
           .nav-search{display:none!important}
           .menu-btn{display:block!important}
-          .mobile-menu{display:block}
-          .cat-nav{display:none!important}
+          .hero-inner{flex-direction:column!important;padding:32px 16px!important}
+          .hero-right{display:none!important}
+          .hero-h1{font-size:32px!important}
           .hero-stats{gap:16px!important}
-          .hero-section{padding:28px 16px!important}
-          .section-pad{padding:20px 16px!important}
+          .cat-nav{display:none!important}
           .products-grid{grid-template-columns:repeat(2,1fr)!important;gap:10px!important}
           .why-grid{grid-template-columns:repeat(2,1fr)!important}
-          .footer-inner{flex-direction:column;text-align:center;gap:8px}
-          .topbar-inner{justify-content:center!important}
-          .topbar-right{display:none!important}
-          .contact-section{padding:24px 16px!important}
+          .contact-grid{grid-template-columns:1fr!important}
+          .footer-inner{flex-direction:column!important;text-align:center!important;gap:8px!important}
+          .section-pad{padding:20px 16px!important}
+          .cat-grid{grid-template-columns:repeat(4,1fr)!important}
         }
         @media(max-width:400px){
           .products-grid{grid-template-columns:repeat(2,1fr)!important}
-          .why-grid{grid-template-columns:1fr 1fr!important}
+          .cat-grid{grid-template-columns:repeat(4,1fr)!important}
         }
-        .cat-nav-item:hover{color:#C9A84C!important;border-bottom-color:#C9A84C!important}
-        .cat-card:hover{border-color:#C9A84C!important}
+        .cat-card:hover{border-color:#C9A84C!important;background:#161616!important}
         .product-card:hover{border-color:#C9A84C!important}
         .add-btn:hover{background:#C9A84C!important;color:#000!important}
+        .cat-nav-item:hover{color:#C9A84C!important;border-bottom-color:#C9A84C!important}
       `}</style>
 
       {/* Topbar */}
-      <div style={s.topbar}>
-        <div style={s.topLeft} className="topbar-inner">
-          <span>📧 admin@ifixcomputers.com</span>
+      <div style={{ background: '#0d0d0d', borderBottom: '1px solid #1a1a1a', padding: '7px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', color: '#555' }}>
+        <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+          <span>✉ admin@ifixcomputers.com</span>
           <span>📞 +91 98765 43210</span>
-          <span>📍 Delhi</span>
+          <span>📍 Shimla, Himachal Pradesh</span>
         </div>
-        <div style={s.topRight} className="topbar-right">Free Expert Advice on Every Purchase!</div>
+        <div style={{ color: '#C9A84C', fontWeight: '600', fontSize: '11px', letterSpacing: '0.5px' }}>Free Expert Advice on Every Purchase!</div>
       </div>
 
       {/* Navbar */}
-      <nav style={s.nav}>
-        <div style={s.logo}>IFIX<span style={{ color: '#fff' }}>Computers</span></div>
-        <div style={s.searchBox} className="nav-search">
-          <input style={s.searchInput} placeholder="Search products..." value={search} onChange={e => setSearch(e.target.value)} />
-          <button style={s.searchBtn}>🔍</button>
+      <nav style={{ background: '#0A0A0A', borderBottom: '1px solid #1a1a1a', padding: '12px 24px', display: 'flex', alignItems: 'center', gap: '16px', position: 'sticky', top: 0, zIndex: 100 }}>
+        <div style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '24px', fontWeight: '700', color: '#C9A84C', letterSpacing: '2px', whiteSpace: 'nowrap' }}>
+          IFIX<span style={{ color: '#fff' }}>Computers</span>
         </div>
-        <div style={s.navRight}>
+        <div style={{ flex: 1, maxWidth: '420px', display: 'flex', background: '#141414', border: '1px solid #2a2a2a', borderRadius: '5px', overflow: 'hidden' }} className="nav-search">
+          <input
+            style={{ flex: 1, background: 'transparent', border: 'none', padding: '9px 14px', color: '#aaa', fontSize: '13px', outline: 'none' }}
+            placeholder="Search products, brands..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+          <button style={{ background: '#C9A84C', border: 'none', padding: '9px 16px', color: '#000', fontWeight: '700', fontSize: '14px' }}>🔍</button>
+        </div>
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: '10px', alignItems: 'center' }}>
           <Link to="/cart">
-            <button style={s.cartBtn}>🛒 Cart ({cart.length})</button>
+            <button style={{ background: '#C9A84C', color: '#000', border: 'none', borderRadius: '5px', padding: '9px 20px', fontWeight: '700', fontSize: '13px', letterSpacing: '0.5px' }}>
+              🛒 Cart ({cart.length})
+            </button>
           </Link>
-          <button style={{ ...s.menuBtn, display: 'none' }} className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}>☰</button>
+          <button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}
+            style={{ background: 'transparent', border: '1px solid #2a2a2a', color: '#fff', borderRadius: '5px', padding: '9px 12px', fontSize: '18px', display: 'none' }}>☰</button>
         </div>
       </nav>
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div style={{ background: '#111', borderBottom: '1px solid #222', padding: '12px 20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <div style={{ display: 'flex', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', overflow: 'hidden' }}>
+        <div style={{ background: '#111', borderBottom: '1px solid #222', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: '5px', overflow: 'hidden' }}>
             <input style={{ flex: 1, background: 'transparent', border: 'none', padding: '10px 14px', color: '#fff', fontSize: '13px', outline: 'none' }} placeholder="Search products..." />
             <button style={{ background: '#C9A84C', border: 'none', padding: '10px 14px', color: '#000', fontWeight: '700' }}>🔍</button>
           </div>
-          {['Home', 'Products', 'Cart'].map(item => (
-            <Link key={item} to={item === 'Home' ? '/' : `/${item.toLowerCase()}`} onClick={() => setMenuOpen(false)}>
-              <div style={{ color: '#C9A84C', fontSize: '14px', fontWeight: '600', padding: '8px 0', borderBottom: '1px solid #222' }}>{item}</div>
+          {[['Home', '/'], ['Products', '/products'], ['Cart', '/cart']].map(([label, path]) => (
+            <Link key={label} to={path} onClick={() => setMenuOpen(false)}>
+              <div style={{ color: '#C9A84C', fontSize: '15px', fontWeight: '600', padding: '8px 0', borderBottom: '1px solid #1a1a1a' }}>{label}</div>
             </Link>
           ))}
         </div>
       )}
 
-      {/* Category Nav Bar */}
-      <div style={s.catNav} className="cat-nav">
+      {/* Category Nav */}
+      <div style={{ background: '#0d0d0d', borderBottom: '1px solid #1a1a1a', padding: '0 24px', display: 'flex', overflowX: 'auto' }} className="cat-nav">
         {['Home', 'Processors', 'GPU / Graphics', 'Motherboards', 'RAM', 'Storage', 'Cooling', 'Cabinets', 'PSU', 'Accessories'].map((item, i) => (
           <Link to={i === 0 ? '/' : '/products'} key={item}>
-            <div style={i === 0 ? s.catNavItemActive : s.catNavItem} className="cat-nav-item">{item}</div>
+            <div className="cat-nav-item" style={{ padding: '11px 16px', fontSize: '12px', color: i === 0 ? '#C9A84C' : '#555', whiteSpace: 'nowrap', borderBottom: i === 0 ? '2px solid #C9A84C' : '2px solid transparent', letterSpacing: '0.5px', fontWeight: i === 0 ? '600' : '400' }}>
+              {item}
+            </div>
           </Link>
         ))}
       </div>
 
-      {/* Hero */}
-      <div style={{ ...s.hero, flexWrap: 'wrap' }} className="hero-section">
-        <div className="hero-content" style={{ display: 'flex', alignItems: 'center', gap: '32px', width: '100%', flexWrap: 'wrap' }}>
-          <div style={{ flex: 1, minWidth: '260px' }}>
-            <div style={s.heroBadge}>⭐ Delhi's No.1 Computer Store</div>
-            <h1 style={s.heroH1} className="hero-h1">
-              Premium Computer<br />
-              Parts & <span style={{ color: '#C9A84C' }}>Accessories</span>
-            </h1>
-            <p style={s.heroP}>Curated selection of high-performance components. Expert advice, genuine warranty, best prices — trusted by builders across Himachal Pradesh.</p>
-            <div style={s.heroBtns}>
-              <Link to="/products"><button style={s.btnPrimary}>Shop Now →</button></Link>
-              <a href="tel:+919876543210"><button style={s.btnOutline}>📞 Call Us</button></a>
+      {/* ===== HERO BANNER ===== */}
+      <div style={{ position: 'relative', overflow: 'hidden', background: '#0A0A0A', borderBottom: '1px solid #1a1a1a' }}>
+        {/* Grid Background */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(201,168,76,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,0.05) 1px, transparent 1px)', backgroundSize: '48px 48px', pointerEvents: 'none' }}></div>
+        {/* Glow */}
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 75% 50%, rgba(201,168,76,0.08) 0%, transparent 60%), radial-gradient(ellipse at 15% 60%, rgba(201,168,76,0.04) 0%, transparent 50%)', pointerEvents: 'none' }}></div>
+        {/* Corner accent */}
+        <div style={{ position: 'absolute', top: 0, right: 0, width: '300px', height: '300px', background: 'radial-gradient(ellipse at top right, rgba(201,168,76,0.06) 0%, transparent 70%)', pointerEvents: 'none' }}></div>
+
+        <div className="hero-inner" style={{ position: 'relative', zIndex: 1, padding: '64px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '40px' }}>
+          {/* Left Content */}
+          <div style={{ flex: 1, maxWidth: '560px' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.25)', color: '#C9A84C', fontSize: '10px', padding: '5px 14px', borderRadius: '2px', letterSpacing: '2.5px', textTransform: 'uppercase', marginBottom: '20px' }}>
+              ⭐ Shimla's No.1 Computer Store
             </div>
-            <div style={s.heroStats} className="hero-stats">
+            <h1 className="hero-h1" style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '56px', fontWeight: '700', lineHeight: '1.05', color: '#F0EDE8', marginBottom: '8px', letterSpacing: '1px' }}>
+              Premium Parts.
+            </h1>
+            <h1 className="hero-h1" style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '56px', fontWeight: '700', lineHeight: '1.05', color: '#C9A84C', marginBottom: '20px', letterSpacing: '1px' }}>
+              Expert Advice.
+            </h1>
+            <div style={{ width: '60px', height: '3px', background: '#C9A84C', marginBottom: '20px', borderRadius: '2px' }}></div>
+            <p style={{ fontSize: '15px', color: '#666', lineHeight: '1.8', marginBottom: '28px', maxWidth: '440px' }}>
+              Curated selection of high-performance components. Genuine warranty, best prices — trusted by builders across Himachal Pradesh.
+            </p>
+            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '40px' }}>
+              <Link to="/products">
+                <button style={{ background: '#C9A84C', color: '#000', border: 'none', borderRadius: '4px', padding: '14px 32px', fontWeight: '700', fontSize: '14px', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                  Shop Now →
+                </button>
+              </Link>
+              <a href="tel:+919876543210">
+                <button style={{ background: 'transparent', color: '#C9A84C', border: '1px solid #C9A84C', borderRadius: '4px', padding: '14px 32px', fontWeight: '600', fontSize: '14px', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                  📞 Call Us
+                </button>
+              </a>
+            </div>
+            {/* Stats */}
+            <div className="hero-stats" style={{ display: 'flex', gap: '32px', flexWrap: 'wrap', paddingTop: '28px', borderTop: '1px solid #1a1a1a' }}>
               {[['500+', 'Products'], ['5★', 'Rated'], ['3yr', 'Warranty'], ['24/7', 'Support']].map(([num, label]) => (
-                <div key={label} style={s.heroStat}>
-                  <div style={s.heroStatNum}>{num}</div>
-                  <div style={s.heroStatLabel}>{label}</div>
+                <div key={label} style={{ textAlign: 'center' }}>
+                  <div style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '28px', fontWeight: '700', color: '#C9A84C' }}>{num}</div>
+                  <div style={{ fontSize: '10px', color: '#444', letterSpacing: '1.5px', textTransform: 'uppercase', marginTop: '2px' }}>{label}</div>
                 </div>
               ))}
             </div>
           </div>
-          <div style={s.heroRight} className="hero-right">
-            <div style={{ fontSize: '72px', marginBottom: '12px' }}>🖥️</div>
-            <div style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '20px', color: '#fff', marginBottom: '4px' }}>Expert Advice</div>
-            <div style={{ fontSize: '11px', color: '#666', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '16px' }}>Always Available</div>
-            <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer">
-              <button style={{ ...s.btnPrimary, width: '100%', fontSize: '12px' }}>💬 WhatsApp Us</button>
-            </a>
+
+          {/* Right Visual */}
+          <div className="hero-right" style={{ flexShrink: 0, width: '260px' }}>
+            <div style={{ background: '#111', border: '1px solid #2a2a2a', borderRadius: '12px', padding: '28px 20px', textAlign: 'center', position: 'relative' }}>
+              {/* Glow behind card */}
+              <div style={{ position: 'absolute', inset: '-24px', background: 'radial-gradient(ellipse, rgba(201,168,76,0.07) 0%, transparent 70%)', pointerEvents: 'none', borderRadius: '50%' }}></div>
+              <div className="float-anim" style={{ fontSize: '72px', marginBottom: '12px', display: 'block' }}>🖥️</div>
+              <div style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '18px', color: '#F0EDE8', fontWeight: '700', marginBottom: '4px', letterSpacing: '1px' }}>Expert Builds</div>
+              <div style={{ fontSize: '10px', color: '#444', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '20px' }}>Always Available</div>
+              {/* Spec list */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px' }}>
+                {['Intel / AMD Processors', 'RTX 40 Series GPUs', 'DDR5 RAM & NVMe SSDs', '3 Year Warranty'].map(spec => (
+                  <div key={spec} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#0d0d0d', border: '1px solid #1a1a1a', borderRadius: '4px', padding: '7px 12px', textAlign: 'left' }}>
+                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#C9A84C', flexShrink: 0 }}></div>
+                    <div style={{ fontSize: '11px', color: '#888' }}>{spec}</div>
+                  </div>
+                ))}
+              </div>
+              <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer">
+                <button style={{ width: '100%', background: '#25D366', color: '#fff', border: 'none', borderRadius: '4px', padding: '11px', fontWeight: '700', fontSize: '13px', letterSpacing: '0.5px' }}>
+                  💬 WhatsApp Us
+                </button>
+              </a>
+            </div>
           </div>
         </div>
       </div>
+      {/* ===== END HERO BANNER ===== */}
 
       {/* Shop By Category */}
-      <div style={s.catSection} className="section-pad">
-        <div style={s.sectionSub}>Browse by type</div>
-        <div style={s.sectionTitle}>Shop By Category</div>
-        <div style={s.catGrid} className="cat-grid">
+      <div style={{ padding: '36px 24px 28px' }} className="section-pad">
+        <div style={{ fontSize: '11px', color: '#C9A84C', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '6px' }}>Browse by type</div>
+        <h2 style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '24px', fontWeight: '700', color: '#F0EDE8', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '20px' }}>Shop By Category</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '12px' }} className="cat-grid">
           {categories.map(cat => (
             <Link to="/products" key={cat.name}>
-              <div style={s.catCard} className="cat-card">
-                <div style={s.catCardEmoji}>{cat.emoji}</div>
-                <div style={s.catCardName}>{cat.name}</div>
+              <div className="cat-card" style={{ background: '#111', border: '1px solid #1a1a1a', borderRadius: '8px', padding: '18px 8px', textAlign: 'center', cursor: 'pointer' }}>
+                <div style={{ fontSize: '28px', marginBottom: '8px' }}>{cat.emoji}</div>
+                <div style={{ fontSize: '11px', color: '#C9A84C', fontWeight: '600', letterSpacing: '0.5px' }}>{cat.name}</div>
               </div>
             </Link>
           ))}
@@ -229,85 +225,109 @@ export default function Home() {
       </div>
 
       {/* Featured Products */}
-      <div style={s.productsSection} className="section-pad">
-        <div style={s.sectionSub}>Handpicked for you</div>
-        <div style={{ ...s.sectionTitle, marginBottom: '20px' }}>Featured Products</div>
-        <div style={s.productsGrid} className="products-grid">
+      <div style={{ padding: '0 24px 36px', background: '#0A0A0A' }} className="section-pad">
+        <div style={{ fontSize: '11px', color: '#C9A84C', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '6px' }}>Handpicked for you</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <h2 style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '24px', fontWeight: '700', color: '#F0EDE8', textTransform: 'uppercase', letterSpacing: '1px' }}>Featured Products</h2>
+          <Link to="/products">
+            <span style={{ fontSize: '12px', color: '#C9A84C', letterSpacing: '1px', borderBottom: '1px solid #C9A84C', paddingBottom: '2px' }}>View All →</span>
+          </Link>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '16px' }} className="products-grid">
           {products.map(product => (
-            <div key={product.id} style={s.productCard} className="product-card">
-              <div style={s.productImg}>
-                {product.tag && <div style={s.productBadge(product.tag)}>{product.tag}</div>}
-                <div style={s.discountBadge}>-{discount(product.originalPrice, product.price)}%</div>
+            <div key={product.id} className="product-card" style={{ background: '#111', border: '1px solid #1a1a1a', borderRadius: '8px', overflow: 'hidden', position: 'relative' }}>
+              <div style={{ background: '#161616', height: '130px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '48px', borderBottom: '1px solid #1a1a1a', position: 'relative' }}>
+                {product.tag && (
+                  <div style={{ position: 'absolute', top: '8px', left: '8px', background: product.tag === 'HOT' ? '#e53e3e' : product.tag === 'NEW' ? '#38a169' : '#C9A84C', color: product.tag === 'SALE' ? '#000' : '#fff', fontSize: '9px', padding: '3px 8px', borderRadius: '2px', fontWeight: '700', letterSpacing: '1px' }}>
+                    {product.tag}
+                  </div>
+                )}
+                <div style={{ position: 'absolute', top: '8px', right: '8px', background: '#e53e3e', color: '#fff', fontSize: '9px', padding: '3px 8px', borderRadius: '2px', fontWeight: '700' }}>
+                  -{discount(product.originalPrice, product.price)}%
+                </div>
                 {product.emoji}
               </div>
-              <div style={s.productBody}>
-                <div style={s.productCat}>{product.category}</div>
-                <div style={s.productName}>{product.name}</div>
-                <div style={s.productPriceRow}>
-                  <span style={s.productPrice}>₹{product.price.toLocaleString()}</span>
-                  <span style={s.productOrigPrice}>₹{product.originalPrice.toLocaleString()}</span>
+              <div style={{ padding: '12px' }}>
+                <div style={{ fontSize: '10px', color: '#C9A84C', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: '4px' }}>{product.category}</div>
+                <div style={{ fontSize: '13px', color: '#F0EDE8', fontWeight: '500', marginBottom: '8px', lineHeight: '1.4' }}>{product.name}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                  <span style={{ fontSize: '16px', color: '#C9A84C', fontWeight: '700', fontFamily: 'Rajdhani, sans-serif' }}>₹{product.price.toLocaleString()}</span>
+                  <span style={{ fontSize: '11px', color: '#333', textDecoration: 'line-through' }}>₹{product.originalPrice.toLocaleString()}</span>
                 </div>
-                <div style={s.productStock(product.stock)}>{product.stock ? '● In Stock' : '● Out of Stock'}</div>
-                <div style={{ fontSize: '10px', color: '#555', marginBottom: '10px' }}>Warranty: {product.warranty}</div>
-                <button style={s.addBtn} className="add-btn" onClick={() => addToCart(product)}>Add to Cart</button>
+                <div style={{ fontSize: '10px', color: product.stock ? '#38a169' : '#e53e3e', marginBottom: '6px', letterSpacing: '0.5px' }}>
+                  {product.stock ? '● In Stock' : '● Out of Stock'}
+                </div>
+                <div style={{ fontSize: '10px', color: '#333', marginBottom: '10px' }}>Warranty: {product.warranty}</div>
+                <button className="add-btn" onClick={() => addToCart(product)}
+                  style={{ width: '100%', background: 'transparent', color: '#C9A84C', border: '1px solid #2a2a2a', borderRadius: '4px', padding: '8px', fontSize: '11px', fontWeight: '600', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                  Add to Cart
+                </button>
               </div>
             </div>
           ))}
         </div>
         <div style={{ textAlign: 'center', marginTop: '28px' }}>
           <Link to="/products">
-            <button style={{ ...s.btnOutline, fontSize: '13px' }}>View All Products →</button>
+            <button style={{ background: 'transparent', color: '#C9A84C', border: '1px solid #C9A84C', borderRadius: '4px', padding: '12px 32px', fontWeight: '600', fontSize: '13px', letterSpacing: '1px', textTransform: 'uppercase' }}>
+              View All Products →
+            </button>
           </Link>
         </div>
       </div>
 
       {/* Why Choose Us */}
-      <div style={s.whySection}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={s.sectionSub}>Our promise</div>
-          <div style={s.sectionTitle}>Why Choose IFIX?</div>
+      <div style={{ background: '#0d0d0d', borderTop: '1px solid #1a1a1a', borderBottom: '1px solid #1a1a1a', padding: '40px 24px' }} className="section-pad">
+        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+          <div style={{ fontSize: '11px', color: '#C9A84C', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '6px' }}>Our Promise</div>
+          <h2 style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '24px', fontWeight: '700', color: '#F0EDE8', textTransform: 'uppercase', letterSpacing: '1px' }}>Why Choose IFIX?</h2>
         </div>
-        <div style={s.whyGrid} className="why-grid">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }} className="why-grid">
           {[
             { icon: '🛡️', title: 'Genuine Parts', desc: '100% authentic components with manufacturer warranty on every product' },
             { icon: '⚡', title: 'Expert Advice', desc: 'Professional guidance for every build, upgrade and repair' },
             { icon: '💰', title: 'Best Prices', desc: 'Most competitive pricing in Shimla with no hidden charges' },
             { icon: '🔧', title: 'After Sales Support', desc: 'We are always here for you even after your purchase' },
           ].map(w => (
-            <div key={w.title} style={s.whyCard}>
+            <div key={w.title} style={{ textAlign: 'center', padding: '24px 16px', background: '#111', border: '1px solid #1a1a1a', borderRadius: '8px' }}>
               <div style={{ fontSize: '32px', marginBottom: '12px' }}>{w.icon}</div>
-              <div style={{ fontSize: '15px', fontWeight: '700', color: '#C9A84C', fontFamily: 'Rajdhani, sans-serif', marginBottom: '6px', letterSpacing: '0.5px' }}>{w.title}</div>
-              <div style={{ fontSize: '12px', color: '#666', lineHeight: '1.7' }}>{w.desc}</div>
+              <div style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '16px', fontWeight: '700', color: '#C9A84C', marginBottom: '8px', letterSpacing: '0.5px', textTransform: 'uppercase' }}>{w.title}</div>
+              <div style={{ fontSize: '12px', color: '#555', lineHeight: '1.7' }}>{w.desc}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* Contact Section */}
-      <div style={s.contactSection} className="contact-section">
+      <div style={{ padding: '40px 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '32px', alignItems: 'center' }} className="contact-grid section-pad">
         <div>
-          <div style={s.sectionSub}>Get in touch</div>
-          <h2 style={{ ...s.sectionTitle, fontSize: '30px', marginBottom: '12px' }}>Ready to Build<br />Your Dream PC?</h2>
-          <p style={{ fontSize: '13px', color: '#666', lineHeight: '1.8', marginBottom: '20px' }}>Browse our products, add to cart, then contact us directly to confirm your order. We guide you every step of the way.</p>
-          <div style={s.heroBtns}>
-            <Link to="/products"><button style={s.btnPrimary}>Browse Products</button></Link>
+          <div style={{ fontSize: '11px', color: '#C9A84C', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '8px' }}>Get in touch</div>
+          <h2 style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '32px', fontWeight: '700', color: '#F0EDE8', marginBottom: '12px', lineHeight: '1.2', textTransform: 'uppercase', letterSpacing: '1px' }}>
+            Ready to Build<br />Your Dream PC?
+          </h2>
+          <p style={{ fontSize: '13px', color: '#555', lineHeight: '1.8', marginBottom: '24px' }}>
+            Browse our products, add to cart, then contact us directly to confirm your order. We guide you every step of the way.
+          </p>
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <Link to="/products">
+              <button style={{ background: '#C9A84C', color: '#000', border: 'none', borderRadius: '4px', padding: '12px 28px', fontWeight: '700', fontSize: '13px', letterSpacing: '1px', textTransform: 'uppercase' }}>Browse Products</button>
+            </Link>
             <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer">
-              <button style={{ ...s.btnOutline }}>💬 WhatsApp</button>
+              <button style={{ background: 'transparent', color: '#C9A84C', border: '1px solid #C9A84C', borderRadius: '4px', padding: '12px 28px', fontWeight: '600', fontSize: '13px', letterSpacing: '1px', textTransform: 'uppercase' }}>💬 WhatsApp</button>
             </a>
           </div>
         </div>
-        <div style={s.contactBox}>
+        <div style={{ background: '#111', border: '1px solid #1a1a1a', borderRadius: '8px', overflow: 'hidden' }}>
           {[
             { icon: '📞', label: '+91 98765 43210', sub: 'Call or WhatsApp anytime' },
             { icon: '✉️', label: 'admin@ifixcomputers.com', sub: 'Email us anytime' },
-            { icon: '📍', label: 'Delhi', sub: 'Visit our store' },
+            { icon: '📍', label: 'Shimla, Himachal Pradesh', sub: 'Visit our store' },
             { icon: '🕐', label: 'Mon - Sat: 10am - 7pm', sub: 'Store timings' },
           ].map((row, i) => (
-            <div key={i} style={{ ...s.contactRow, borderBottom: i === 3 ? 'none' : '1px solid #1a1a1a' }}>
-              <div style={s.contactIcon}>{row.icon}</div>
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '16px 20px', borderBottom: i < 3 ? '1px solid #1a1a1a' : 'none' }}>
+              <div style={{ width: '40px', height: '40px', background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.15)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', flexShrink: 0 }}>{row.icon}</div>
               <div>
                 <div style={{ fontSize: '13px', color: '#F0EDE8', fontWeight: '500' }}>{row.label}</div>
-                <div style={{ fontSize: '11px', color: '#555' }}>{row.sub}</div>
+                <div style={{ fontSize: '11px', color: '#444' }}>{row.sub}</div>
               </div>
             </div>
           ))}
@@ -315,11 +335,11 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <div style={s.footer}>
-        <div className="footer-inner" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
-          <div style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '18px', color: '#C9A84C', fontWeight: '700' }}>IFIX Computers</div>
-          <div style={{ fontSize: '11px', color: '#444' }}>© 2025 IFIX Computers, Shimla · All rights reserved</div>
-          <Link to="/admin"><div style={{ fontSize: '11px', color: '#333', cursor: 'pointer' }}>Admin</div></Link>
+      <div style={{ background: '#060606', borderTop: '1px solid #1a1a1a', padding: '20px 24px' }}>
+        <div className="footer-inner" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+          <div style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '20px', color: '#C9A84C', fontWeight: '700', letterSpacing: '2px' }}>IFIX<span style={{ color: '#fff' }}>Computers</span></div>
+          <div style={{ fontSize: '11px', color: '#333' }}>© 2025 IFIX Computers, Shimla · All rights reserved</div>
+          <Link to="/admin"><div style={{ fontSize: '11px', color: '#222', cursor: 'pointer' }}>Admin</div></Link>
         </div>
       </div>
     </div>
