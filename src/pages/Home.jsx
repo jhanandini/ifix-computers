@@ -2,46 +2,14 @@ import { Link } from 'react-router-dom'
 import { useState } from 'react'
 
 const products = [
-  {
-    id: 1, name: 'Intel Core i5-13600K', price: 24500, originalPrice: 32000, category: 'Processor',
-    img: 'https://m.media-amazon.com/images/I/61o4DjXQ8PL._SX522_.jpg',
-    stock: true, warranty: '3 Years', tag: 'HOT'
-  },
-  {
-    id: 2, name: 'RTX 4060 8GB GDDR6', price: 33000, originalPrice: 40000, category: 'GPU',
-    img: 'https://m.media-amazon.com/images/I/81VlsGfnORL._SX522_.jpg',
-    stock: true, warranty: '3 Years', tag: 'NEW'
-  },
-  {
-    id: 3, name: 'Samsung 16GB DDR5', price: 7200, originalPrice: 9500, category: 'RAM',
-    img: 'https://m.media-amazon.com/images/I/61DBToNbayL._SX522_.jpg',
-    stock: true, warranty: '5 Years', tag: ''
-  },
-  {
-    id: 4, name: 'ASUS B760M Motherboard', price: 14800, originalPrice: 18000, category: 'Motherboard',
-    img: 'https://m.media-amazon.com/images/I/81lFnHrV3kL._SX522_.jpg',
-    stock: true, warranty: '3 Years', tag: ''
-  },
-  {
-    id: 5, name: 'Samsung 980 Pro 1TB', price: 8500, originalPrice: 11000, category: 'Storage',
-    img: 'https://m.media-amazon.com/images/I/81+dGDTXFKL._SX522_.jpg',
-    stock: true, warranty: '5 Years', tag: 'SALE'
-  },
-  {
-    id: 6, name: 'Cooler Master Hyper 212', price: 3100, originalPrice: 4200, category: 'Cooling',
-    img: 'https://m.media-amazon.com/images/I/61s5gTMDEiL._SX522_.jpg',
-    stock: false, warranty: '2 Years', tag: ''
-  },
-  {
-    id: 7, name: 'Corsair 650W PSU', price: 7800, originalPrice: 9500, category: 'PSU',
-    img: 'https://m.media-amazon.com/images/I/71DnWfBGpJL._SX522_.jpg',
-    stock: true, warranty: '5 Years', tag: ''
-  },
-  {
-    id: 8, name: 'Corsair 4000D Cabinet', price: 8200, originalPrice: 10000, category: 'Cabinet',
-    img: 'https://m.media-amazon.com/images/I/81GE+wLhGjL._SX522_.jpg',
-    stock: true, warranty: '2 Years', tag: 'NEW'
-  },
+  { id: 1, name: 'Intel Core i5-13600K', price: 24500, originalPrice: 32000, category: 'Processor', img: '/images/cpu.jpg', stock: true, warranty: '3 Years', tag: 'HOT' },
+  { id: 2, name: 'RTX 4060 8GB GDDR6', price: 33000, originalPrice: 40000, category: 'GPU', img: '/images/gpu.jpg', stock: true, warranty: '3 Years', tag: 'NEW' },
+  { id: 3, name: 'Samsung 16GB DDR5', price: 7200, originalPrice: 9500, category: 'RAM', img: '/images/ram.jpg', stock: true, warranty: '5 Years', tag: '' },
+  { id: 4, name: 'ASUS B760M Motherboard', price: 14800, originalPrice: 18000, category: 'Motherboard', img: '/images/mobo.jpg', stock: true, warranty: '3 Years', tag: '' },
+  { id: 5, name: 'Samsung 980 Pro 1TB', price: 8500, originalPrice: 11000, category: 'Storage', img: '/images/ssd.jpg', stock: true, warranty: '5 Years', tag: 'SALE' },
+  { id: 6, name: 'Cooler Master Hyper 212', price: 3100, originalPrice: 4200, category: 'Cooling', img: '/images/cooler.jpg', stock: false, warranty: '2 Years', tag: '' },
+  { id: 7, name: 'Corsair 650W PSU', price: 7800, originalPrice: 9500, category: 'PSU', img: '/images/psu.jpg', stock: true, warranty: '5 Years', tag: '' },
+  { id: 8, name: 'Corsair 4000D Cabinet', price: 8200, originalPrice: 10000, category: 'Cabinet', img: '/images/cabinet.jpg', stock: true, warranty: '2 Years', tag: 'NEW' },
 ]
 
 const categories = [
@@ -72,172 +40,165 @@ export default function Home() {
   const discount = (orig, price) => Math.round((orig - price) / orig * 100)
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0A0A0A' }}>
+    <div style={{ minHeight: '100vh', background: '#f5f3ff', fontFamily: "'Poppins', sans-serif" }}>
       <style>{`
-        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-        .float-anim { animation: float 4s ease-in-out infinite; }
-        @media(max-width:768px){
-          .nav-search{display:none!important}
-          .menu-btn{display:block!important}
-          .hero-inner{flex-direction:column!important;padding:32px 16px!important}
-          .hero-right{display:none!important}
-          .hero-h1{font-size:32px!important}
-          .hero-stats{gap:16px!important}
-          .cat-nav{display:none!important}
-          .products-grid{grid-template-columns:repeat(2,1fr)!important;gap:10px!important}
-          .why-grid{grid-template-columns:repeat(2,1fr)!important}
-          .contact-grid{grid-template-columns:1fr!important}
-          .footer-inner{flex-direction:column!important;text-align:center!important;gap:8px!important}
-          .section-pad{padding:20px 16px!important}
-          .cat-grid{grid-template-columns:repeat(4,1fr)!important}
-          .topbar-right{display:none!important}
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+        * { font-family: 'Poppins', sans-serif; }
+        :root {
+          --purple: #3b0764;
+          --purple-mid: #4c0a7c;
+          --purple-light: #6d28d9;
+          --purple-pale: #ede9fe;
+          --white: #ffffff;
+          --gray: #f5f3ff;
+          --text: #1e1b4b;
+          --muted: #6b7280;
         }
-        .cat-card:hover{border-color:#C9A84C!important;background:#161616!important}
-        .product-card:hover{border-color:#C9A84C!important}
-        .add-btn:hover{background:#C9A84C!important;color:#000!important}
-        .cat-nav-item:hover{color:#C9A84C!important;border-bottom-color:#C9A84C!important}
+        .add-btn:hover { background: var(--purple-light) !important; color: #fff !important; }
+        .cat-card:hover { border-color: var(--purple-light) !important; background: var(--purple-pale) !important; }
+        .prod-card:hover { border-color: #6d28d9 !important; box-shadow: 0 4px 20px rgba(109,40,217,0.1) !important; }
+        .cat-nav-item:hover { color: #a78bfa !important; border-bottom-color: #a78bfa !important; }
+        @media(max-width: 768px) {
+          .nav-search { display: none !important; }
+          .menu-btn { display: flex !important; }
+          .hero-inner { flex-direction: column !important; padding: 32px 16px !important; }
+          .hero-right { display: none !important; }
+          .hero-h1 { font-size: 32px !important; }
+          .hero-stats { gap: 16px !important; }
+          .cat-nav { display: none !important; }
+          .cat-grid { grid-template-columns: repeat(4, 1fr) !important; }
+          .prod-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+          .why-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .contact-grid { flex-direction: column !important; }
+          .topbar { display: none !important; }
+          .footer-inner { flex-direction: column !important; text-align: center !important; gap: 8px !important; }
+          .section-pad { padding: 28px 16px !important; }
+        }
+        @media(max-width: 480px) {
+          .prod-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .cat-grid { grid-template-columns: repeat(4, 1fr) !important; }
+          .hero-h1 { font-size: 26px !important; }
+        }
       `}</style>
 
       {/* Topbar */}
-      <div style={{ background: '#0d0d0d', borderBottom: '1px solid #1a1a1a', padding: '7px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', color: '#555' }}>
-        <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+      <div className="topbar" style={{ background: '#2d0052', padding: '7px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', color: '#c4b5fd' }}>
+        <div style={{ display: 'flex', gap: '20px' }}>
           <span>✉ admin@ifixcomputers.com</span>
           <span>📞 +91 98765 43210</span>
-          <span>📍 Shimla, Himachal Pradesh</span>
+          <span>📍 Delhi, India</span>
         </div>
-        <div className="topbar-right" style={{ color: '#C9A84C', fontWeight: '600', fontSize: '11px', letterSpacing: '0.5px' }}>
-          Free Expert Advice on Every Purchase!
-        </div>
+        <div style={{ color: '#a78bfa', fontWeight: '600' }}>Free Expert Advice on Every Purchase!</div>
       </div>
 
       {/* Navbar */}
-      <nav style={{ background: '#0A0A0A', borderBottom: '1px solid #1a1a1a', padding: '12px 24px', display: 'flex', alignItems: 'center', gap: '16px', position: 'sticky', top: 0, zIndex: 100 }}>
-        <div style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '24px', fontWeight: '700', color: '#C9A84C', letterSpacing: '2px', whiteSpace: 'nowrap' }}>
-          IFIX<span style={{ color: '#fff' }}>Computers</span>
+      <nav style={{ background: '#3b0764', padding: '13px 24px', display: 'flex', alignItems: 'center', gap: '16px', position: 'sticky', top: 0, zIndex: 100, boxShadow: '0 2px 20px rgba(0,0,0,0.3)' }}>
+        <div style={{ fontSize: '22px', fontWeight: '800', color: '#fff', letterSpacing: '1px', whiteSpace: 'nowrap' }}>
+          IFIX<span style={{ color: '#a78bfa' }}>Computers</span>
         </div>
-        <div className="nav-search" style={{ flex: 1, maxWidth: '420px', display: 'flex', background: '#141414', border: '1px solid #2a2a2a', borderRadius: '5px', overflow: 'hidden' }}>
-          <input style={{ flex: 1, background: 'transparent', border: 'none', padding: '9px 14px', color: '#aaa', fontSize: '13px', outline: 'none' }} placeholder="Search products, brands..." />
-          <button style={{ background: '#C9A84C', border: 'none', padding: '9px 16px', color: '#000', fontWeight: '700', fontSize: '14px' }}>🔍</button>
+        <div className="nav-search" style={{ flex: 1, maxWidth: '420px', display: 'flex', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '8px', overflow: 'hidden' }}>
+          <input style={{ flex: 1, background: 'transparent', border: 'none', padding: '9px 14px', color: '#fff', fontSize: '13px', outline: 'none' }} placeholder="Search products, brands..." />
+          <button style={{ background: '#6d28d9', border: 'none', padding: '9px 16px', color: '#fff', fontWeight: '700', fontSize: '13px' }}>🔍</button>
         </div>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: '10px', alignItems: 'center' }}>
           <Link to="/cart">
-            <button style={{ background: '#C9A84C', color: '#000', border: 'none', borderRadius: '5px', padding: '9px 20px', fontWeight: '700', fontSize: '13px' }}>
+            <button style={{ background: '#6d28d9', color: '#fff', border: 'none', borderRadius: '8px', padding: '9px 18px', fontWeight: '700', fontSize: '13px' }}>
               🛒 Cart ({cart.length})
             </button>
           </Link>
           <button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}
-            style={{ background: 'transparent', border: '1px solid #2a2a2a', color: '#fff', borderRadius: '5px', padding: '9px 12px', fontSize: '18px', display: 'none' }}>☰</button>
+            style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', borderRadius: '8px', padding: '9px 12px', fontSize: '18px', display: 'none', alignItems: 'center', justifyContent: 'center' }}>☰</button>
         </div>
       </nav>
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div style={{ background: '#111', borderBottom: '1px solid #222', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <div style={{ display: 'flex', background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: '5px', overflow: 'hidden' }}>
+        <div style={{ background: '#3b0764', borderBottom: '1px solid rgba(255,255,255,0.1)', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '8px', overflow: 'hidden' }}>
             <input style={{ flex: 1, background: 'transparent', border: 'none', padding: '10px 14px', color: '#fff', fontSize: '13px', outline: 'none' }} placeholder="Search products..." />
-            <button style={{ background: '#C9A84C', border: 'none', padding: '10px 14px', color: '#000', fontWeight: '700' }}>🔍</button>
+            <button style={{ background: '#6d28d9', border: 'none', padding: '10px 14px', color: '#fff', fontWeight: '700' }}>🔍</button>
           </div>
           {[['Home', '/'], ['Products', '/products'], ['Cart', '/cart']].map(([label, path]) => (
             <Link key={label} to={path} onClick={() => setMenuOpen(false)}>
-              <div style={{ color: '#C9A84C', fontSize: '15px', fontWeight: '600', padding: '8px 0', borderBottom: '1px solid #1a1a1a' }}>{label}</div>
+              <div style={{ color: '#a78bfa', fontSize: '15px', fontWeight: '600', padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>{label}</div>
             </Link>
           ))}
         </div>
       )}
 
       {/* Category Nav */}
-      <div className="cat-nav" style={{ background: '#0d0d0d', borderBottom: '1px solid #1a1a1a', padding: '0 24px', display: 'flex', overflowX: 'auto' }}>
+      <div className="cat-nav" style={{ background: '#2d0052', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '0 24px', display: 'flex', overflowX: 'auto' }}>
         {['Home', 'Processors', 'GPU / Graphics', 'Motherboards', 'RAM', 'Storage', 'Cooling', 'Cabinets', 'PSU', 'Accessories'].map((item, i) => (
           <Link to={i === 0 ? '/' : '/products'} key={item}>
-            <div className="cat-nav-item" style={{ padding: '11px 16px', fontSize: '12px', color: i === 0 ? '#C9A84C' : '#555', whiteSpace: 'nowrap', borderBottom: i === 0 ? '2px solid #C9A84C' : '2px solid transparent', letterSpacing: '0.5px', fontWeight: i === 0 ? '600' : '400' }}>
+            <div className="cat-nav-item" style={{ padding: '11px 16px', fontSize: '12px', color: i === 0 ? '#a78bfa' : '#6b7280', whiteSpace: 'nowrap', borderBottom: i === 0 ? '2px solid #a78bfa' : '2px solid transparent', fontWeight: i === 0 ? '600' : '400', display: 'block' }}>
               {item}
             </div>
           </Link>
         ))}
       </div>
 
-      {/* ===== HERO BANNER ===== */}
-      <div style={{ position: 'relative', overflow: 'hidden', background: '#0A0A0A', borderBottom: '1px solid #1a1a1a' }}>
-        {/* Grid Background */}
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(201,168,76,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,0.05) 1px, transparent 1px)', backgroundSize: '48px 48px', pointerEvents: 'none' }}></div>
-        {/* Radial Glow */}
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 75% 50%, rgba(201,168,76,0.09) 0%, transparent 60%), radial-gradient(ellipse at 15% 60%, rgba(201,168,76,0.04) 0%, transparent 50%)', pointerEvents: 'none' }}></div>
-        {/* Corner Accent */}
-        <div style={{ position: 'absolute', top: 0, right: 0, width: '400px', height: '400px', background: 'radial-gradient(ellipse at top right, rgba(201,168,76,0.07) 0%, transparent 70%)', pointerEvents: 'none' }}></div>
+      {/* HERO BANNER */}
+      <div style={{ position: 'relative', overflow: 'hidden', background: '#3b0764', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        {/* Hero BG image with overlay */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/images/hero.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.15 }}></div>
+        {/* Pattern overlay */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(109,40,217,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(109,40,217,0.08) 1px, transparent 1px)', backgroundSize: '48px 48px' }}></div>
+        {/* Purple glow */}
+        <div style={{ position: 'absolute', right: 0, top: 0, width: '50%', height: '100%', background: 'radial-gradient(ellipse at right, rgba(109,40,217,0.2) 0%, transparent 70%)' }}></div>
 
-        <div className="hero-inner" style={{ position: 'relative', zIndex: 1, padding: '64px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '40px' }}>
-
-          {/* Left Content */}
-          <div style={{ flex: 1, maxWidth: '560px' }}>
-            {/* Badge */}
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.25)', color: '#C9A84C', fontSize: '10px', padding: '5px 14px', borderRadius: '2px', letterSpacing: '2.5px', textTransform: 'uppercase', marginBottom: '20px' }}>
-              ⭐ Shimla's No.1 Computer Store
+        <div className="hero-inner" style={{ position: 'relative', zIndex: 1, padding: '72px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '40px' }}>
+          {/* Left */}
+          <div style={{ flex: 1, maxWidth: '580px' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(167,139,250,0.12)', border: '1px solid rgba(167,139,250,0.3)', color: '#a78bfa', fontSize: '10px', padding: '5px 14px', borderRadius: '4px', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '20px', fontWeight: '600' }}>
+              ⭐ Delhi's No.1 Computer Store
             </div>
-
-            {/* Headline */}
-            <h1 className="hero-h1" style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '58px', fontWeight: '700', lineHeight: '1.05', color: '#F0EDE8', marginBottom: '4px', letterSpacing: '1px' }}>
+            <h1 className="hero-h1" style={{ fontSize: '52px', fontWeight: '800', color: '#fff', lineHeight: '1.1', marginBottom: '8px', letterSpacing: '-0.5px' }}>
               Premium Parts.
             </h1>
-            <h1 className="hero-h1" style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '58px', fontWeight: '700', lineHeight: '1.05', color: '#C9A84C', marginBottom: '16px', letterSpacing: '1px' }}>
+            <h1 className="hero-h1" style={{ fontSize: '52px', fontWeight: '800', color: '#a78bfa', lineHeight: '1.1', marginBottom: '20px', letterSpacing: '-0.5px' }}>
               Expert Advice.
             </h1>
-
-            {/* Gold line */}
-            <div style={{ width: '64px', height: '3px', background: 'linear-gradient(90deg, #C9A84C, transparent)', marginBottom: '20px', borderRadius: '2px' }}></div>
-
-            <p style={{ fontSize: '15px', color: '#666', lineHeight: '1.8', marginBottom: '28px', maxWidth: '440px' }}>
-              Curated selection of high-performance components. Genuine warranty, best prices — trusted by builders across Himachal Pradesh.
+            <div style={{ width: '60px', height: '4px', background: '#6d28d9', borderRadius: '2px', marginBottom: '20px' }}></div>
+            <p style={{ fontSize: '15px', color: '#9ca3af', lineHeight: '1.9', marginBottom: '32px', maxWidth: '440px' }}>
+              Curated selection of high-performance components. Genuine warranty, best prices — trusted by builders across Delhi NCR.
             </p>
-
-            {/* Buttons */}
             <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '40px' }}>
               <Link to="/products">
-                <button style={{ background: '#C9A84C', color: '#000', border: 'none', borderRadius: '4px', padding: '14px 32px', fontWeight: '700', fontSize: '14px', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                <button style={{ background: '#6d28d9', color: '#fff', border: 'none', borderRadius: '8px', padding: '14px 32px', fontWeight: '700', fontSize: '14px', letterSpacing: '0.5px' }}>
                   Shop Now →
                 </button>
               </Link>
               <a href="tel:+919876543210">
-                <button style={{ background: 'transparent', color: '#C9A84C', border: '1px solid #C9A84C', borderRadius: '4px', padding: '14px 32px', fontWeight: '600', fontSize: '14px', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                <button style={{ background: 'transparent', color: '#a78bfa', border: '2px solid #a78bfa', borderRadius: '8px', padding: '12px 32px', fontWeight: '600', fontSize: '14px' }}>
                   📞 Call Us
                 </button>
               </a>
             </div>
-
-            {/* Stats */}
-            <div className="hero-stats" style={{ display: 'flex', gap: '32px', flexWrap: 'wrap', paddingTop: '28px', borderTop: '1px solid #1a1a1a' }}>
+            <div className="hero-stats" style={{ display: 'flex', gap: '32px', flexWrap: 'wrap', paddingTop: '28px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
               {[['500+', 'Products'], ['5★', 'Rated'], ['3yr', 'Warranty'], ['24/7', 'Support']].map(([num, label]) => (
                 <div key={label} style={{ textAlign: 'center' }}>
-                  <div style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '28px', fontWeight: '700', color: '#C9A84C' }}>{num}</div>
-                  <div style={{ fontSize: '10px', color: '#444', letterSpacing: '1.5px', textTransform: 'uppercase', marginTop: '2px' }}>{label}</div>
+                  <div style={{ fontSize: '28px', fontWeight: '800', color: '#a78bfa' }}>{num}</div>
+                  <div style={{ fontSize: '10px', color: '#6b7280', letterSpacing: '1.5px', textTransform: 'uppercase', marginTop: '2px' }}>{label}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Right Visual Card */}
-          <div className="hero-right" style={{ flexShrink: 0, width: '280px' }}>
-            <div style={{ background: '#111', border: '1px solid #2a2a2a', borderRadius: '12px', padding: '28px 20px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-              {/* Card glow */}
-              <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 70%)', pointerEvents: 'none' }}></div>
-              {/* Top gold line */}
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: 'linear-gradient(90deg, transparent, #C9A84C, transparent)' }}></div>
-
-              <div className="float-anim" style={{ fontSize: '80px', marginBottom: '12px', display: 'block', position: 'relative', zIndex: 1 }}>🖥️</div>
-              <div style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '20px', color: '#F0EDE8', fontWeight: '700', marginBottom: '4px', letterSpacing: '1px', position: 'relative', zIndex: 1 }}>Expert Builds</div>
-              <div style={{ fontSize: '10px', color: '#444', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '20px', position: 'relative', zIndex: 1 }}>Always Available</div>
-
-              {/* Specs */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px', position: 'relative', zIndex: 1 }}>
-                {['Intel / AMD Processors', 'RTX 40 Series GPUs', 'DDR5 RAM & NVMe SSDs', '3 Year Warranty Included'].map(spec => (
-                  <div key={spec} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#0d0d0d', border: '1px solid #1a1a1a', borderRadius: '4px', padding: '8px 12px', textAlign: 'left' }}>
-                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#C9A84C', flexShrink: 0 }}></div>
-                    <div style={{ fontSize: '11px', color: '#888' }}>{spec}</div>
-                  </div>
-                ))}
-              </div>
-
-              <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer" style={{ position: 'relative', zIndex: 1, display: 'block' }}>
-                <button style={{ width: '100%', background: '#25D366', color: '#fff', border: 'none', borderRadius: '4px', padding: '12px', fontWeight: '700', fontSize: '13px', letterSpacing: '0.5px' }}>
+          {/* Right Card */}
+          <div className="hero-right" style={{ flexShrink: 0, width: '260px' }}>
+            <div style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(167,139,250,0.25)', borderRadius: '12px', padding: '28px 20px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: '#6d28d9' }}></div>
+              <div style={{ fontSize: '72px', marginBottom: '12px' }}>🖥️</div>
+              <div style={{ fontSize: '20px', fontWeight: '700', color: '#fff', marginBottom: '4px' }}>Expert Builds</div>
+              <div style={{ fontSize: '10px', color: '#6b7280', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '20px' }}>Always Available</div>
+              {['Intel / AMD Processors', 'RTX 40 Series GPUs', 'DDR5 RAM & NVMe SSDs', '3 Year Warranty'].map(spec => (
+                <div key={spec} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '6px', padding: '8px 12px', marginBottom: '8px', textAlign: 'left' }}>
+                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#a78bfa', flexShrink: 0 }}></div>
+                  <div style={{ fontSize: '11px', color: '#9ca3af' }}>{spec}</div>
+                </div>
+              ))}
+              <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer">
+                <button style={{ width: '100%', background: '#25D366', color: '#fff', border: 'none', borderRadius: '8px', padding: '12px', fontWeight: '700', fontSize: '13px', marginTop: '8px' }}>
                   💬 WhatsApp Us
                 </button>
               </a>
@@ -245,18 +206,20 @@ export default function Home() {
           </div>
         </div>
       </div>
-      {/* ===== END HERO BANNER ===== */}
 
       {/* Shop By Category */}
-      <div className="section-pad" style={{ padding: '36px 24px 28px' }}>
-        <div style={{ fontSize: '11px', color: '#C9A84C', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '6px' }}>Browse by type</div>
-        <h2 style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '24px', fontWeight: '700', color: '#F0EDE8', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '20px' }}>Shop By Category</h2>
-        <div className="cat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '12px' }}>
+      <div className="section-pad" style={{ padding: '48px 24px', background: '#f5f3ff' }}>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <div style={{ fontSize: '11px', color: '#6d28d9', letterSpacing: '3px', textTransform: 'uppercase', fontWeight: '600', marginBottom: '8px' }}>Browse by type</div>
+          <h2 style={{ fontSize: '32px', fontWeight: '800', color: '#1e1b4b', marginBottom: '8px' }}>Shop By Category</h2>
+          <p style={{ fontSize: '14px', color: '#6b7280', maxWidth: '400px', margin: '0 auto' }}>Find exactly what you need from our wide range of computer components</p>
+        </div>
+        <div className="cat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px', maxWidth: '900px', margin: '0 auto' }}>
           {categories.map(cat => (
             <Link to="/products" key={cat.name}>
-              <div className="cat-card" style={{ background: '#111', border: '1px solid #1a1a1a', borderRadius: '8px', padding: '18px 8px', textAlign: 'center', cursor: 'pointer' }}>
-                <div style={{ fontSize: '28px', marginBottom: '8px' }}>{cat.emoji}</div>
-                <div style={{ fontSize: '11px', color: '#C9A84C', fontWeight: '600', letterSpacing: '0.5px' }}>{cat.name}</div>
+              <div className="cat-card" style={{ background: '#fff', border: '1.5px solid #ede9fe', borderRadius: '12px', padding: '20px 8px', textAlign: 'center', cursor: 'pointer' }}>
+                <div style={{ fontSize: '30px', marginBottom: '8px' }}>{cat.emoji}</div>
+                <div style={{ fontSize: '11px', color: '#6d28d9', fontWeight: '600', letterSpacing: '0.3px' }}>{cat.name}</div>
               </div>
             </Link>
           ))}
@@ -264,57 +227,50 @@ export default function Home() {
       </div>
 
       {/* Featured Products */}
-      <div className="section-pad" style={{ padding: '0 24px 36px', background: '#0A0A0A' }}>
-        <div style={{ fontSize: '11px', color: '#C9A84C', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '6px' }}>Handpicked for you</div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h2 style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '24px', fontWeight: '700', color: '#F0EDE8', textTransform: 'uppercase', letterSpacing: '1px' }}>Featured Products</h2>
-          <Link to="/products">
-            <span style={{ fontSize: '12px', color: '#C9A84C', letterSpacing: '1px', borderBottom: '1px solid #C9A84C', paddingBottom: '2px' }}>View All →</span>
-          </Link>
+      <div className="section-pad" style={{ padding: '0 24px 48px', background: '#fff' }}>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <div style={{ fontSize: '11px', color: '#6d28d9', letterSpacing: '3px', textTransform: 'uppercase', fontWeight: '600', marginBottom: '8px' }}>Handpicked for you</div>
+          <h2 style={{ fontSize: '32px', fontWeight: '800', color: '#1e1b4b', marginBottom: '8px' }}>Featured Products</h2>
+          <p style={{ fontSize: '14px', color: '#6b7280', maxWidth: '400px', margin: '0 auto' }}>Top quality components at the best prices in Delhi</p>
         </div>
-        <div className="products-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }}>
+        <div className="prod-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px', maxWidth: '1000px', margin: '0 auto' }}>
           {products.map(product => (
-            <div key={product.id} className="product-card" style={{ background: '#111', border: '1px solid #1a1a1a', borderRadius: '8px', overflow: 'hidden' }}>
-              {/* Product Image */}
-              <div style={{ background: '#fff', height: '160px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderBottom: '1px solid #1a1a1a', position: 'relative', overflow: 'hidden', padding: '12px' }}>
+            <div key={product.id} className="prod-card" style={{ background: '#fff', border: '1.5px solid #f3f4f6', borderRadius: '12px', overflow: 'hidden' }}>
+              <div style={{ background: '#f9fafb', height: '160px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderBottom: '1px solid #f3f4f6', position: 'relative', padding: '12px' }}>
                 {product.tag && (
-                  <div style={{ position: 'absolute', top: '8px', left: '8px', background: product.tag === 'HOT' ? '#e53e3e' : product.tag === 'NEW' ? '#38a169' : '#C9A84C', color: product.tag === 'SALE' ? '#000' : '#fff', fontSize: '9px', padding: '3px 8px', borderRadius: '2px', fontWeight: '700', letterSpacing: '1px', zIndex: 2 }}>
+                  <div style={{ position: 'absolute', top: '8px', left: '8px', background: product.tag === 'HOT' ? '#fee2e2' : product.tag === 'NEW' ? '#dcfce7' : '#ede9fe', color: product.tag === 'HOT' ? '#b91c1c' : product.tag === 'NEW' ? '#15803d' : '#6d28d9', fontSize: '9px', padding: '3px 8px', borderRadius: '4px', fontWeight: '700', letterSpacing: '0.5px', zIndex: 2 }}>
                     {product.tag}
                   </div>
                 )}
-                <div style={{ position: 'absolute', top: '8px', right: '8px', background: '#e53e3e', color: '#fff', fontSize: '9px', padding: '3px 8px', borderRadius: '2px', fontWeight: '700', zIndex: 2 }}>
+                <div style={{ position: 'absolute', top: '8px', right: '8px', background: '#6d28d9', color: '#fff', fontSize: '9px', padding: '3px 8px', borderRadius: '4px', fontWeight: '700', zIndex: 2 }}>
                   -{discount(product.originalPrice, product.price)}%
                 </div>
-                <img
-                  src={product.img}
-                  alt={product.name}
+                <img src={product.img} alt={product.name}
                   style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                  onError={e => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/200x160/111111/C9A84C?text=IFIX' }}
-                />
+                  onError={e => { e.target.onerror = null; e.target.style.display = 'none'; e.target.parentNode.innerHTML += '<div style="font-size:48px">🖥️</div>' }} />
               </div>
-              {/* Product Info */}
-              <div style={{ padding: '12px' }}>
-                <div style={{ fontSize: '10px', color: '#C9A84C', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: '4px' }}>{product.category}</div>
-                <div style={{ fontSize: '13px', color: '#F0EDE8', fontWeight: '500', marginBottom: '8px', lineHeight: '1.4' }}>{product.name}</div>
+              <div style={{ padding: '14px' }}>
+                <div style={{ fontSize: '10px', color: '#6d28d9', letterSpacing: '1.5px', textTransform: 'uppercase', fontWeight: '600', marginBottom: '4px' }}>{product.category}</div>
+                <div style={{ fontSize: '13px', color: '#1e1b4b', fontWeight: '600', marginBottom: '10px', lineHeight: '1.4' }}>{product.name}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                  <span style={{ fontSize: '16px', color: '#C9A84C', fontWeight: '700', fontFamily: 'Rajdhani, sans-serif' }}>₹{product.price.toLocaleString()}</span>
-                  <span style={{ fontSize: '11px', color: '#333', textDecoration: 'line-through' }}>₹{product.originalPrice.toLocaleString()}</span>
+                  <span style={{ fontSize: '18px', color: '#3b0764', fontWeight: '800' }}>₹{product.price.toLocaleString()}</span>
+                  <span style={{ fontSize: '11px', color: '#9ca3af', textDecoration: 'line-through' }}>₹{product.originalPrice.toLocaleString()}</span>
                 </div>
-                <div style={{ fontSize: '10px', color: product.stock ? '#38a169' : '#e53e3e', marginBottom: '6px' }}>
+                <div style={{ fontSize: '10px', color: product.stock ? '#16a34a' : '#dc2626', fontWeight: '600', marginBottom: '6px' }}>
                   {product.stock ? '● In Stock' : '● Out of Stock'}
                 </div>
-                <div style={{ fontSize: '10px', color: '#333', marginBottom: '10px' }}>Warranty: {product.warranty}</div>
+                <div style={{ fontSize: '10px', color: '#9ca3af', marginBottom: '12px' }}>Warranty: {product.warranty}</div>
                 <button className="add-btn" onClick={() => addToCart(product)}
-                  style={{ width: '100%', background: 'transparent', color: '#C9A84C', border: '1px solid #2a2a2a', borderRadius: '4px', padding: '8px', fontSize: '11px', fontWeight: '600', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                  style={{ width: '100%', background: '#ede9fe', color: '#6d28d9', border: 'none', borderRadius: '8px', padding: '9px', fontSize: '11px', fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
                   Add to Cart
                 </button>
               </div>
             </div>
           ))}
         </div>
-        <div style={{ textAlign: 'center', marginTop: '28px' }}>
+        <div style={{ textAlign: 'center', marginTop: '32px' }}>
           <Link to="/products">
-            <button style={{ background: 'transparent', color: '#C9A84C', border: '1px solid #C9A84C', borderRadius: '4px', padding: '12px 32px', fontWeight: '600', fontSize: '13px', letterSpacing: '1px', textTransform: 'uppercase' }}>
+            <button style={{ background: 'transparent', color: '#6d28d9', border: '2px solid #6d28d9', borderRadius: '8px', padding: '12px 36px', fontWeight: '700', fontSize: '14px' }}>
               View All Products →
             </button>
           </Link>
@@ -322,72 +278,73 @@ export default function Home() {
       </div>
 
       {/* Why Choose Us */}
-      <div className="section-pad" style={{ background: '#0d0d0d', borderTop: '1px solid #1a1a1a', borderBottom: '1px solid #1a1a1a', padding: '40px 24px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
-          <div style={{ fontSize: '11px', color: '#C9A84C', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '6px' }}>Our Promise</div>
-          <h2 style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '24px', fontWeight: '700', color: '#F0EDE8', textTransform: 'uppercase', letterSpacing: '1px' }}>Why Choose IFIX?</h2>
+      <div className="section-pad" style={{ padding: '48px 24px', background: '#f5f3ff' }}>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <div style={{ fontSize: '11px', color: '#6d28d9', letterSpacing: '3px', textTransform: 'uppercase', fontWeight: '600', marginBottom: '8px' }}>Our Promise</div>
+          <h2 style={{ fontSize: '32px', fontWeight: '800', color: '#1e1b4b', marginBottom: '8px' }}>Why Choose IFIX?</h2>
+          <p style={{ fontSize: '14px', color: '#6b7280', maxWidth: '400px', margin: '0 auto' }}>We are committed to providing the best experience for every customer</p>
         </div>
-        <div className="why-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }}>
+        <div className="why-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px', maxWidth: '900px', margin: '0 auto' }}>
           {[
             { icon: '🛡️', title: 'Genuine Parts', desc: '100% authentic components with manufacturer warranty on every product' },
             { icon: '⚡', title: 'Expert Advice', desc: 'Professional guidance for every build, upgrade and repair' },
-            { icon: '💰', title: 'Best Prices', desc: 'Most competitive pricing in Shimla with no hidden charges' },
+            { icon: '💰', title: 'Best Prices', desc: 'Most competitive pricing in Delhi with no hidden charges' },
             { icon: '🔧', title: 'After Sales Support', desc: 'We are always here for you even after your purchase' },
           ].map(w => (
-            <div key={w.title} style={{ textAlign: 'center', padding: '24px 16px', background: '#111', border: '1px solid #1a1a1a', borderRadius: '8px' }}>
-              <div style={{ fontSize: '32px', marginBottom: '12px' }}>{w.icon}</div>
-              <div style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '16px', fontWeight: '700', color: '#C9A84C', marginBottom: '8px', letterSpacing: '0.5px', textTransform: 'uppercase' }}>{w.title}</div>
-              <div style={{ fontSize: '12px', color: '#555', lineHeight: '1.7' }}>{w.desc}</div>
+            <div key={w.title} style={{ textAlign: 'center', padding: '28px 16px', background: '#fff', border: '1.5px solid #ede9fe', borderRadius: '12px' }}>
+              <div style={{ fontSize: '36px', marginBottom: '14px' }}>{w.icon}</div>
+              <div style={{ fontSize: '15px', fontWeight: '700', color: '#1e1b4b', marginBottom: '8px' }}>{w.title}</div>
+              <div style={{ fontSize: '12px', color: '#6b7280', lineHeight: '1.7' }}>{w.desc}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* Contact Section */}
-      <div className="contact-grid section-pad" style={{ padding: '40px 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '32px', alignItems: 'center' }}>
-        <div>
-          <div style={{ fontSize: '11px', color: '#C9A84C', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '8px' }}>Get in touch</div>
-          <h2 style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '32px', fontWeight: '700', color: '#F0EDE8', marginBottom: '12px', lineHeight: '1.2', textTransform: 'uppercase', letterSpacing: '1px' }}>
-            Ready to Build<br />Your Dream PC?
-          </h2>
-          <p style={{ fontSize: '13px', color: '#555', lineHeight: '1.8', marginBottom: '24px' }}>
+      <div className="section-pad" style={{ padding: '64px 24px', background: '#3b0764' }}>
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <div style={{ fontSize: '11px', color: '#a78bfa', letterSpacing: '3px', textTransform: 'uppercase', fontWeight: '600', marginBottom: '8px' }}>Get in touch</div>
+          <h2 style={{ fontSize: '36px', fontWeight: '800', color: '#fff', marginBottom: '12px' }}>Ready to Build Your Dream PC?</h2>
+          <p style={{ fontSize: '14px', color: '#9ca3af', maxWidth: '500px', margin: '0 auto', lineHeight: '1.8' }}>
             Browse our products, add to cart, then contact us directly to confirm your order. We guide you every step of the way.
           </p>
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+        </div>
+        <div className="contact-grid" style={{ display: 'flex', gap: '32px', alignItems: 'flex-start', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap', width: '100%', marginBottom: '32px' }}>
             <Link to="/products">
-              <button style={{ background: '#C9A84C', color: '#000', border: 'none', borderRadius: '4px', padding: '12px 28px', fontWeight: '700', fontSize: '13px', letterSpacing: '1px', textTransform: 'uppercase' }}>Browse Products</button>
+              <button style={{ background: '#6d28d9', color: '#fff', border: 'none', borderRadius: '8px', padding: '14px 32px', fontWeight: '700', fontSize: '14px' }}>Browse Products</button>
             </Link>
             <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer">
-              <button style={{ background: 'transparent', color: '#C9A84C', border: '1px solid #C9A84C', borderRadius: '4px', padding: '12px 28px', fontWeight: '600', fontSize: '13px', letterSpacing: '1px', textTransform: 'uppercase' }}>💬 WhatsApp</button>
+              <button style={{ background: '#25D366', color: '#fff', border: 'none', borderRadius: '8px', padding: '14px 32px', fontWeight: '700', fontSize: '14px' }}>💬 WhatsApp Us</button>
             </a>
           </div>
-        </div>
-        <div style={{ background: '#111', border: '1px solid #1a1a1a', borderRadius: '8px', overflow: 'hidden' }}>
-          {[
-            { icon: '📞', label: '+91 98765 43210', sub: 'Call or WhatsApp anytime' },
-            { icon: '✉️', label: 'admin@ifixcomputers.com', sub: 'Email us anytime' },
-            { icon: '📍', label: 'Shimla, Himachal Pradesh', sub: 'Visit our store' },
-            { icon: '🕐', label: 'Mon - Sat: 10am - 7pm', sub: 'Store timings' },
-          ].map((row, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '16px 20px', borderBottom: i < 3 ? '1px solid #1a1a1a' : 'none' }}>
-              <div style={{ width: '40px', height: '40px', background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.15)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', flexShrink: 0 }}>{row.icon}</div>
-              <div>
-                <div style={{ fontSize: '13px', color: '#F0EDE8', fontWeight: '500' }}>{row.label}</div>
-                <div style={{ fontSize: '11px', color: '#444' }}>{row.sub}</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', width: '100%', maxWidth: '800px' }}>
+            {[
+              { icon: '📞', label: '+91 98765 43210', sub: 'Call or WhatsApp anytime' },
+              { icon: '✉️', label: 'admin@ifixcomputers.com', sub: 'Email us anytime' },
+              { icon: '📍', label: 'Delhi, India', sub: 'Visit our store' },
+              { icon: '🕐', label: 'Mon - Sat: 10am - 7pm', sub: 'Store timings' },
+            ].map((row, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '14px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(167,139,250,0.2)', borderRadius: '12px', padding: '16px 20px' }}>
+                <div style={{ width: '44px', height: '44px', background: 'rgba(109,40,217,0.3)', border: '1px solid rgba(167,139,250,0.3)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', flexShrink: 0 }}>{row.icon}</div>
+                <div>
+                  <div style={{ fontSize: '13px', color: '#f9fafb', fontWeight: '600' }}>{row.label}</div>
+                  <div style={{ fontSize: '11px', color: '#6b7280' }}>{row.sub}</div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Footer */}
-      <div style={{ background: '#060606', borderTop: '1px solid #1a1a1a', padding: '20px 24px' }}>
+      <div style={{ background: '#2d0052', borderTop: '1px solid rgba(255,255,255,0.06)', padding: '20px 24px' }}>
         <div className="footer-inner" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-          <div style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '20px', color: '#C9A84C', fontWeight: '700', letterSpacing: '2px' }}>
-            IFIX<span style={{ color: '#fff' }}>Computers</span>
+          <div style={{ fontSize: '20px', fontWeight: '800', color: '#fff' }}>
+            IFIX<span style={{ color: '#a78bfa' }}>Computers</span>
           </div>
-          <div style={{ fontSize: '11px', color: '#333' }}>© 2025 IFIX Computers, Shimla · All rights reserved</div>
-          <Link to="/admin"><div style={{ fontSize: '11px', color: '#222', cursor: 'pointer' }}>Admin</div></Link>
+          <div style={{ fontSize: '11px', color: '#4b5563' }}>© 2025 IFIX Computers, Delhi · All rights reserved</div>
+          <Link to="/admin"><div style={{ fontSize: '11px', color: '#2d0052', cursor: 'pointer' }}>Admin</div></Link>
         </div>
       </div>
     </div>
