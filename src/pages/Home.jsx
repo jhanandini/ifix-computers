@@ -160,7 +160,7 @@ export default function Home() {
           {/* Left */}
           <div style={{ flex: 1, maxWidth: '580px' }}>
             <div style={{ display: 'inline-block', background: 'rgba(167,139,250,0.12)', border: '1px solid rgba(167,139,250,0.3)', color: '#c4b5fd', fontSize: '11px', padding: '5px 14px', borderRadius: '4px', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '20px', fontWeight: '600' }}>
-              Delhi's No.1 Computer Store
+              Delhi's Computer Store
             </div>
             <h1 className="hero-h1" style={{ fontSize: '54px', fontWeight: '800', color: '#fff', lineHeight: '1.1', marginBottom: '8px', letterSpacing: '-1px' }}>
               Premium Parts.
@@ -388,6 +388,7 @@ export default function Home() {
             IFIX<span style={{ color: '#a78bfa' }}>Computers</span>
           </div>
           <div style={{ fontSize: '12px', color: '#4b5563' }}>2025 IFIX Computers, Delhi. All rights reserved</div>
+          <Link to="/terms"><div style={{ fontSize: '12px', color: '#a78bfa', cursor: 'pointer' }}>Terms & Conditions</div></Link>
           <Link to="/admin"><div style={{ fontSize: '12px', color: '#0a0118', cursor: 'pointer' }}>Admin</div></Link>
         </div>
       </div>

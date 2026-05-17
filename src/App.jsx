@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Home from './pages/Home'
 import Products from './pages/Products'
 import Cart from './pages/Cart'
+import Terms from './pages/Terms'
 import AdminLogin from './admin/AdminLogin'
 import Dashboard from './admin/Dashboard'
 import ProductHistory from './admin/ProductHistory'
@@ -20,6 +21,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/terms" element={<Terms />} />  
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/admin/history" element={<ProtectedRoute><ProductHistory /></ProtectedRoute>} />
