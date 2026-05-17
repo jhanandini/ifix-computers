@@ -1,221 +1,409 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
-
-const historyData = [
-  { id: 1, product: 'Intel Core i5-13600K', category: 'Processor', buyer: 'Rahul Sharma', phone: '9876543210', buyDate: '2025-03-15', price: 24500, warranty: '3 Years', warrantyEnd: '2028-03-15', stockDate: '2025-01-10', status: 'Delivered' },
-  { id: 2, product: 'RTX 4060 8GB', category: 'GPU', buyer: 'Amit Singh', phone: '9812345678', buyDate: '2025-03-18', price: 33000, warranty: '3 Years', warrantyEnd: '2028-03-18', stockDate: '2025-01-15', status: 'Delivered' },
-  { id: 3, product: 'Samsung 16GB DDR5', category: 'RAM', buyer: 'Priya Thakur', phone: '9856781234', buyDate: '2025-03-20', price: 7200, warranty: '5 Years', warrantyEnd: '2030-03-20', stockDate: '2025-01-20', status: 'Delivered' },
-  { id: 4, product: 'ASUS B760M Motherboard', category: 'Motherboard', buyer: 'Vikram Verma', phone: '9834567890', buyDate: '2025-04-01', price: 14800, warranty: '3 Years', warrantyEnd: '2028-04-01', stockDate: '2025-01-25', status: 'Delivered' },
-  { id: 5, product: 'Samsung 980 Pro 1TB', category: 'Storage', buyer: 'Neha Gupta', phone: '9867452310', buyDate: '2025-04-05', price: 8500, warranty: '5 Years', warrantyEnd: '2030-04-05', stockDate: '2025-02-05', status: 'Delivered' },
-  { id: 6, product: 'RTX 4070 12GB', category: 'GPU', buyer: 'Suresh Kumar', phone: '9845671230', buyDate: '2025-04-10', price: 55000, warranty: '3 Years', warrantyEnd: '2028-04-10', stockDate: '2025-02-10', status: 'Pending' },
-  { id: 7, product: 'Intel Core i7-13700K', category: 'Processor', buyer: 'Deepak Negi', phone: '9878901234', buyDate: '2025-04-12', price: 35000, warranty: '3 Years', warrantyEnd: '2028-04-12', stockDate: '2025-01-10', status: 'Delivered' },
-  { id: 8, product: 'Corsair 32GB DDR5', category: 'RAM', buyer: 'Anjali Mehta', phone: '9823456789', buyDate: '2025-04-15', price: 13500, warranty: '5 Years', warrantyEnd: '2030-04-15', stockDate: '2025-02-15', status: 'Pending' },
-]
+import { useState, useEffect } from 'react'
+import { db } from '../firebase'
+import { collection, addDoc, deleteDoc, doc, onSnapshot, updateDoc } from 'firebase/firestore'
 
 export default function ProductHistory() {
   const navigate = useNavigate()
-  const [records, setRecords] = useState(JSON.parse(localStorage.getItem('ifix_history') || JSON.stringify(historyData)))
+  const [records, setRecords] = useState([])
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [filterStatus, setFilterStatus] = useState('All')
   const [showAdd, setShowAdd] = useState(false)
   const [selected, setSelected] = useState(null)
-  const [newRecord, setNewRecord] = useState({ product: '', category: '', buyer: '', phone: '', buyDate: '', price: '', warranty: '', warrantyEnd: '', stockDate: '', status: 'Delivered' })
+  const [newRecord, setNewRecord] = useState({
+    product: '', category: '', buyerName: '', buyerPhone: '',
+    buyerEmail: '', buyerAddress: '', purchaseDate: '',
+    price: '', paymentMethod: 'Cash', warrantyAtPurchase: '',
+    warrantyStartDate: '', warrantyEndDate: '', totalWarrantyMonths: '',
+    condition: 'new', status: 'Delivered', notes: ''
+  })
 
   const logout = () => { localStorage.removeItem('ifix_admin'); navigate('/admin') }
-  const saveRecords = (updated) => { setRecords(updated); localStorage.setItem('ifix_history', JSON.stringify(updated)) }
 
-  const addRecord = () => {
-    if (!newRecord.product || !newRecord.buyer || !newRecord.price) { alert('Please fill product, buyer and price!'); return }
-    saveRecords([...records, { ...newRecord, id: Date.now(), price: parseInt(newRecord.price) }])
-    setNewRecord({ product: '', category: '', buyer: '', phone: '', buyDate: '', price: '', warranty: '', warrantyEnd: '', stockDate: '', status: 'Delivered' })
-    setShowAdd(false)
-    alert('✅ Sale record added!')
+  useEffect(() => {
+    const unsub = onSnapshot(collection(db, 'sales'), (snap) => {
+      setRecords(snap.docs.map(d => ({ id: d.id, ...d.data() })))
+      setLoading(false)
+    })
+    return unsub
+  }, [])
+
+  const calcWarrantyEnd = (startDate, months) => {
+    if (!startDate || !months) return ''
+    const d = new Date(startDate)
+    d.setMonth(d.getMonth() + parseInt(months))
+    return d.toISOString().split('T')[0]
   }
 
-  const deleteRecord = (id) => {
+  const addRecord = async () => {
+    if (!newRecord.product || !newRecord.buyerName || !newRecord.price) {
+      alert('Please fill product, buyer name and price!')
+      return
+    }
+    const warrantyEnd = calcWarrantyEnd(newRecord.warrantyStartDate, newRecord.totalWarrantyMonths)
+    await addDoc(collection(db, 'sales'), {
+      ...newRecord,
+      price: parseInt(newRecord.price),
+      warrantyEndDate: warrantyEnd,
+      createdAt: new Date().toISOString()
+    })
+    setNewRecord({
+      product: '', category: '', buyerName: '', buyerPhone: '',
+      buyerEmail: '', buyerAddress: '', purchaseDate: '',
+      price: '', paymentMethod: 'Cash', warrantyAtPurchase: '',
+      warrantyStartDate: '', warrantyEndDate: '', totalWarrantyMonths: '',
+      condition: 'new', status: 'Delivered', notes: ''
+    })
+    setShowAdd(false)
+    alert('Sale record added!')
+  }
+
+  const deleteRecord = async (id) => {
     if (window.confirm('Delete this record?')) {
-      saveRecords(records.filter(r => r.id !== id))
+      await deleteDoc(doc(db, 'sales', id))
       if (selected?.id === id) setSelected(null)
     }
   }
 
+  const updateStatus = async (id, status) => {
+    await updateDoc(doc(db, 'sales', id), { status })
+  }
+
   const filtered = records.filter(r => {
-    const matchSearch = r.product.toLowerCase().includes(search.toLowerCase()) || r.buyer.toLowerCase().includes(search.toLowerCase())
+    const matchSearch = r.product?.toLowerCase().includes(search.toLowerCase()) ||
+      r.buyerName?.toLowerCase().includes(search.toLowerCase())
     const matchStatus = filterStatus === 'All' || r.status === filterStatus
     return matchSearch && matchStatus
   })
 
-  const totalRevenue = records.reduce((sum, r) => sum + r.price, 0)
+  const totalRevenue = records.reduce((sum, r) => sum + (r.price || 0), 0)
+
+  const isWarrantyExpiring = (endDate) => {
+    if (!endDate) return false
+    const end = new Date(endDate)
+    const now = new Date()
+    const diff = (end - now) / (1000 * 60 * 60 * 24)
+    return diff <= 30 && diff > 0
+  }
+
+  const isWarrantyExpired = (endDate) => {
+    if (!endDate) return false
+    return new Date(endDate) < new Date()
+  }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0A0A0A' }}>
+    <div style={{ minHeight: '100vh', background: '#f5f3ff', fontFamily: "'Inter', sans-serif" }}>
       <style>{`
-        @media(max-width:768px){
-          .stats-grid{grid-template-columns:repeat(2,1fr)!important}
-          .form-grid{grid-template-columns:1fr!important}
-          .detail-grid{grid-template-columns:1fr!important}
-          .table-wrap{overflow-x:auto}
-          .filter-row{flex-wrap:wrap!important}
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        * { font-family: 'Inter', sans-serif !important; box-sizing: border-box; }
+        a { text-decoration: none; color: inherit; }
+        @media(max-width: 768px) {
+          .stats-grid { grid-template-columns: repeat(2,1fr) !important; }
+          .form-grid { grid-template-columns: 1fr !important; }
+          .detail-grid { grid-template-columns: 1fr !important; }
+          .table-wrap { overflow-x: auto; }
+          .filter-row { flex-wrap: wrap !important; }
         }
       `}</style>
 
       {/* Navbar */}
-      <nav style={{ background: '#111', borderBottom: '2px solid #C9A84C', padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', position: 'sticky', top: 0, zIndex: 100 }}>
-        <div style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '20px', fontWeight: '700', color: '#C9A84C', letterSpacing: '2px' }}>
-          IFIX<span style={{ color: '#fff' }}>Computers</span>
-          <span style={{ fontSize: '11px', color: '#444', marginLeft: '12px', fontFamily: 'Inter', letterSpacing: '1px', textTransform: 'uppercase' }}>History</span>
+      <nav style={{ background: '#1e0a3c', padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', position: 'sticky', top: 0, zIndex: 100, boxShadow: '0 2px 12px rgba(0,0,0,0.3)' }}>
+        <div style={{ fontSize: '20px', fontWeight: '800', color: '#fff' }}>
+          IFIX<span style={{ color: '#a78bfa' }}>Computers</span>
+          <span style={{ fontSize: '11px', color: '#6b7280', marginLeft: '12px', fontWeight: '400' }}>Sales History</span>
         </div>
-        <button onClick={logout} style={{ background: 'rgba(229,62,62,0.1)', color: '#e53e3e', border: '1px solid rgba(229,62,62,0.3)', borderRadius: '6px', padding: '8px 16px', fontWeight: '600', fontSize: '13px' }}>🚪 Logout</button>
+        <button onClick={logout} style={{ background: 'rgba(220,38,38,0.15)', color: '#f87171', border: '1px solid rgba(220,38,38,0.3)', borderRadius: '8px', padding: '8px 16px', fontWeight: '600', fontSize: '13px', cursor: 'pointer' }}>
+          Logout
+        </button>
       </nav>
 
       {/* Mobile Nav */}
-      <div style={{ background: '#111', borderBottom: '1px solid #222', padding: '10px 20px', display: 'flex', gap: '8px', overflowX: 'auto' }}>
-        {[['📦 Products', '/admin/dashboard'], ['📋 History', '/admin/history'], ['🧾 Bill', '/admin/bill'], ['🌐 Site', '/']].map(([label, to]) => (
+      <div style={{ background: '#2d0052', borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '10px 20px', display: 'flex', gap: '8px', overflowX: 'auto' }}>
+        {[['Products', '/admin/dashboard', false], ['History', '/admin/history', true], ['Bill', '/admin/bill', false], ['View Site', '/', false]].map(([label, to, active]) => (
           <Link key={to} to={to}>
-            <button style={{ background: label.includes('History') ? '#C9A84C' : 'transparent', color: label.includes('History') ? '#000' : '#888', border: `1px solid ${label.includes('History') ? '#C9A84C' : '#333'}`, borderRadius: '6px', padding: '6px 14px', fontSize: '12px', whiteSpace: 'nowrap' }}>
+            <button style={{ background: active ? '#7c3aed' : 'transparent', color: active ? '#fff' : '#9ca3af', border: `1px solid ${active ? '#7c3aed' : 'rgba(255,255,255,0.1)'}`, borderRadius: '6px', padding: '6px 14px', fontSize: '12px', fontWeight: active ? '700' : '400', whiteSpace: 'nowrap', cursor: 'pointer' }}>
               {label}
             </button>
           </Link>
         ))}
       </div>
 
-      <div style={{ padding: '20px' }}>
+      <div style={{ padding: '24px', maxWidth: '1200px', margin: '0 auto' }}>
         {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '12px', marginBottom: '24px' }} className="stats-grid">
+        <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '14px', marginBottom: '24px' }}>
           {[
-            { label: 'Total Sales', value: records.length, emoji: '📋', color: '#C9A84C' },
-            { label: 'Delivered', value: records.filter(r => r.status === 'Delivered').length, emoji: '✅', color: '#38a169' },
-            { label: 'Pending', value: records.filter(r => r.status === 'Pending').length, emoji: '⏳', color: '#f6ad55' },
-            { label: 'Revenue', value: `₹${totalRevenue.toLocaleString()}`, emoji: '💰', color: '#C9A84C' },
+            { label: 'Total Sales', value: records.length, color: '#7c3aed' },
+            { label: 'Delivered', value: records.filter(r => r.status === 'Delivered').length, color: '#059669' },
+            { label: 'Pending', value: records.filter(r => r.status === 'Pending').length, color: '#d97706' },
+            { label: 'Revenue', value: `Rs.${totalRevenue.toLocaleString()}`, color: '#2563eb' },
           ].map(stat => (
-            <div key={stat.label} style={{ background: '#111', border: '1px solid #222', borderRadius: '8px', padding: '20px', textAlign: 'center' }}>
-              <div style={{ fontSize: '28px', marginBottom: '8px' }}>{stat.emoji}</div>
-              <div style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '24px', fontWeight: '700', color: stat.color }}>{stat.value}</div>
-              <div style={{ fontSize: '11px', color: '#444', marginTop: '4px' }}>{stat.label}</div>
+            <div key={stat.label} style={{ background: '#fff', border: '1.5px solid #e9d5ff', borderRadius: '12px', padding: '20px', textAlign: 'center' }}>
+              <div style={{ fontSize: '28px', fontWeight: '800', color: stat.color, marginBottom: '4px' }}>{stat.value}</div>
+              <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>{stat.label}</div>
             </div>
           ))}
         </div>
 
         {/* Filters */}
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', flexWrap: 'wrap' }} className="filter-row">
-          <div style={{ flex: 1, minWidth: '200px', display: 'flex', background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: '6px', overflow: 'hidden' }}>
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="🔍 Search by product or buyer..." style={{ flex: 1, background: 'transparent', border: 'none', padding: '10px 16px', color: '#fff', fontSize: '13px', outline: 'none' }} />
+        <div className="filter-row" style={{ display: 'flex', gap: '10px', marginBottom: '16px', flexWrap: 'wrap' }}>
+          <div style={{ flex: 1, minWidth: '200px', display: 'flex', background: '#fff', border: '1.5px solid #e9d5ff', borderRadius: '8px', overflow: 'hidden' }}>
+            <input value={search} onChange={e => setSearch(e.target.value)}
+              placeholder="Search by product or buyer..."
+              style={{ flex: 1, background: 'transparent', border: 'none', padding: '10px 16px', color: '#1e0a3c', fontSize: '14px', outline: 'none' }} />
           </div>
-          {['All', 'Delivered', 'Pending'].map(s => (
-            <button key={s} onClick={() => setFilterStatus(s)} style={{ background: filterStatus === s ? '#C9A84C' : 'transparent', color: filterStatus === s ? '#000' : '#888', border: `1px solid ${filterStatus === s ? '#C9A84C' : '#333'}`, borderRadius: '6px', padding: '10px 16px', fontWeight: filterStatus === s ? '700' : '400', fontSize: '13px' }}>
+          {['All', 'Delivered', 'Pending', 'Cancelled'].map(s => (
+            <button key={s} onClick={() => setFilterStatus(s)}
+              style={{ background: filterStatus === s ? '#7c3aed' : '#fff', color: filterStatus === s ? '#fff' : '#6b7280', border: `1.5px solid ${filterStatus === s ? '#7c3aed' : '#e9d5ff'}`, borderRadius: '8px', padding: '10px 16px', fontWeight: filterStatus === s ? '700' : '500', fontSize: '13px', cursor: 'pointer' }}>
               {s}
             </button>
           ))}
-          <button onClick={() => setShowAdd(!showAdd)} style={{ background: '#C9A84C', color: '#000', border: 'none', borderRadius: '6px', padding: '10px 20px', fontWeight: '700', fontSize: '13px' }}>
-            ➕ Add Sale
+          <button onClick={() => setShowAdd(!showAdd)}
+            style={{ background: '#7c3aed', color: '#fff', border: 'none', borderRadius: '8px', padding: '10px 20px', fontWeight: '700', fontSize: '13px', cursor: 'pointer' }}>
+            + Add Sale
           </button>
         </div>
 
-        {/* Add Record Form */}
+        {/* Add Sale Form */}
         {showAdd && (
-          <div style={{ background: '#111', border: '1px solid #C9A84C', borderRadius: '8px', padding: '20px', marginBottom: '20px' }}>
-            <h3 style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '20px', color: '#C9A84C', marginBottom: '16px', textTransform: 'uppercase' }}>➕ Add Sale Record</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '12px', marginBottom: '16px' }} className="form-grid">
-              {[
-                { label: 'Product Name', key: 'product', placeholder: 'e.g. RTX 4060' },
-                { label: 'Category', key: 'category', placeholder: 'e.g. GPU' },
-                { label: 'Buyer Name', key: 'buyer', placeholder: 'e.g. Rahul Sharma' },
-                { label: 'Buyer Phone', key: 'phone', placeholder: 'e.g. 9876543210' },
-                { label: 'Buy Date', key: 'buyDate', placeholder: 'YYYY-MM-DD' },
-                { label: 'Price (₹)', key: 'price', placeholder: 'e.g. 33000' },
-                { label: 'Warranty', key: 'warranty', placeholder: 'e.g. 3 Years' },
-                { label: 'Warranty End', key: 'warrantyEnd', placeholder: 'YYYY-MM-DD' },
-                { label: 'Stock Date', key: 'stockDate', placeholder: 'YYYY-MM-DD' },
-              ].map(field => (
-                <div key={field.key}>
-                  <label style={{ fontSize: '11px', color: '#555', display: 'block', marginBottom: '6px', letterSpacing: '1px', textTransform: 'uppercase' }}>{field.label}</label>
-                  <input placeholder={field.placeholder} value={newRecord[field.key]} onChange={e => setNewRecord({ ...newRecord, [field.key]: e.target.value })}
-                    style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', border: '1px solid #2a2a2a', background: '#1a1a1a', color: '#fff', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} />
-                </div>
-              ))}
-            </div>
+          <div style={{ background: '#fff', border: '2px solid #7c3aed', borderRadius: '12px', padding: '24px', marginBottom: '20px' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#1e0a3c', marginBottom: '20px' }}>Add Sale Record</h3>
             <div style={{ marginBottom: '16px' }}>
-              <label style={{ fontSize: '11px', color: '#555', display: 'block', marginBottom: '6px', letterSpacing: '1px', textTransform: 'uppercase' }}>Status</label>
-              <select value={newRecord.status} onChange={e => setNewRecord({ ...newRecord, status: e.target.value })}
-                style={{ padding: '10px 12px', borderRadius: '6px', border: '1px solid #2a2a2a', background: '#1a1a1a', color: '#fff', fontSize: '13px', outline: 'none' }}>
-                <option value="Delivered">Delivered</option>
-                <option value="Pending">Pending</option>
-              </select>
+              <div style={{ fontSize: '13px', fontWeight: '700', color: '#581c87', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '1px' }}>Product Info</div>
+              <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '12px' }}>
+                {[
+                  { label: 'Product Name *', key: 'product', placeholder: 'e.g. RTX 4060' },
+                  { label: 'Category', key: 'category', placeholder: 'e.g. GPU' },
+                  { label: 'Sale Price (Rs.) *', key: 'price', placeholder: 'e.g. 33000' },
+                ].map(f => (
+                  <div key={f.key}>
+                    <label style={{ fontSize: '12px', color: '#6b7280', display: 'block', marginBottom: '5px', fontWeight: '600' }}>{f.label}</label>
+                    <input placeholder={f.placeholder} value={newRecord[f.key]}
+                      onChange={e => setNewRecord({ ...newRecord, [f.key]: e.target.value })}
+                      style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1.5px solid #e9d5ff', background: '#f5f3ff', color: '#1e0a3c', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} />
+                  </div>
+                ))}
+                <div>
+                  <label style={{ fontSize: '12px', color: '#6b7280', display: 'block', marginBottom: '5px', fontWeight: '600' }}>Condition</label>
+                  <select value={newRecord.condition} onChange={e => setNewRecord({ ...newRecord, condition: e.target.value })}
+                    style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1.5px solid #e9d5ff', background: '#f5f3ff', color: '#1e0a3c', fontSize: '13px', outline: 'none' }}>
+                    <option value="new">New</option>
+                    <option value="old">Second Hand</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={{ fontSize: '12px', color: '#6b7280', display: 'block', marginBottom: '5px', fontWeight: '600' }}>Payment Method</label>
+                  <select value={newRecord.paymentMethod} onChange={e => setNewRecord({ ...newRecord, paymentMethod: e.target.value })}
+                    style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1.5px solid #e9d5ff', background: '#f5f3ff', color: '#1e0a3c', fontSize: '13px', outline: 'none' }}>
+                    {['Cash', 'UPI', 'Bank Transfer', 'Card', 'EMI'].map(m => <option key={m} value={m}>{m}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label style={{ fontSize: '12px', color: '#6b7280', display: 'block', marginBottom: '5px', fontWeight: '600' }}>Purchase Date</label>
+                  <input type="date" value={newRecord.purchaseDate}
+                    onChange={e => setNewRecord({ ...newRecord, purchaseDate: e.target.value })}
+                    style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1.5px solid #e9d5ff', background: '#f5f3ff', color: '#1e0a3c', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} />
+                </div>
+              </div>
             </div>
+
+            <div style={{ marginBottom: '16px' }}>
+              <div style={{ fontSize: '13px', fontWeight: '700', color: '#581c87', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '1px' }}>Warranty Info</div>
+              <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '12px' }}>
+                {[
+                  { label: 'Warranty at Purchase', key: 'warrantyAtPurchase', placeholder: 'e.g. 3 Years' },
+                  { label: 'Total Warranty (Months)', key: 'totalWarrantyMonths', placeholder: 'e.g. 36' },
+                  { label: 'Warranty Start Date', key: 'warrantyStartDate', type: 'date', placeholder: '' },
+                ].map(f => (
+                  <div key={f.key}>
+                    <label style={{ fontSize: '12px', color: '#6b7280', display: 'block', marginBottom: '5px', fontWeight: '600' }}>{f.label}</label>
+                    <input type={f.type || 'text'} placeholder={f.placeholder} value={newRecord[f.key]}
+                      onChange={e => setNewRecord({ ...newRecord, [f.key]: e.target.value })}
+                      style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1.5px solid #e9d5ff', background: '#f5f3ff', color: '#1e0a3c', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} />
+                  </div>
+                ))}
+              </div>
+              {newRecord.warrantyStartDate && newRecord.totalWarrantyMonths && (
+                <div style={{ marginTop: '10px', background: '#d1fae5', border: '1px solid #6ee7b7', borderRadius: '8px', padding: '10px 14px', fontSize: '13px', color: '#065f46', fontWeight: '600' }}>
+                  Warranty End Date: {calcWarrantyEnd(newRecord.warrantyStartDate, newRecord.totalWarrantyMonths)}
+                </div>
+              )}
+            </div>
+
+            <div style={{ marginBottom: '16px' }}>
+              <div style={{ fontSize: '13px', fontWeight: '700', color: '#581c87', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '1px' }}>Buyer Info</div>
+              <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '12px' }}>
+                {[
+                  { label: 'Buyer Name *', key: 'buyerName', placeholder: 'e.g. Rahul Sharma' },
+                  { label: 'Phone Number', key: 'buyerPhone', placeholder: 'e.g. 9876543210' },
+                  { label: 'Email', key: 'buyerEmail', placeholder: 'e.g. rahul@email.com' },
+                  { label: 'Address', key: 'buyerAddress', placeholder: 'e.g. Rohini, Delhi' },
+                  { label: 'Notes', key: 'notes', placeholder: 'Any special notes...' },
+                ].map(f => (
+                  <div key={f.key}>
+                    <label style={{ fontSize: '12px', color: '#6b7280', display: 'block', marginBottom: '5px', fontWeight: '600' }}>{f.label}</label>
+                    <input placeholder={f.placeholder} value={newRecord[f.key]}
+                      onChange={e => setNewRecord({ ...newRecord, [f.key]: e.target.value })}
+                      style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1.5px solid #e9d5ff', background: '#f5f3ff', color: '#1e0a3c', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} />
+                  </div>
+                ))}
+                <div>
+                  <label style={{ fontSize: '12px', color: '#6b7280', display: 'block', marginBottom: '5px', fontWeight: '600' }}>Status</label>
+                  <select value={newRecord.status} onChange={e => setNewRecord({ ...newRecord, status: e.target.value })}
+                    style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1.5px solid #e9d5ff', background: '#f5f3ff', color: '#1e0a3c', fontSize: '13px', outline: 'none' }}>
+                    {['Delivered', 'Pending', 'Cancelled'].map(s => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                </div>
+              </div>
+            </div>
+
             <div style={{ display: 'flex', gap: '10px' }}>
-              <button onClick={addRecord} style={{ background: '#C9A84C', color: '#000', border: 'none', borderRadius: '6px', padding: '10px 24px', fontWeight: '700', fontSize: '14px' }}>✅ Save</button>
-              <button onClick={() => setShowAdd(false)} style={{ background: 'transparent', color: '#666', border: '1px solid #333', borderRadius: '6px', padding: '10px 24px', fontSize: '14px' }}>Cancel</button>
+              <button onClick={addRecord} style={{ background: '#7c3aed', color: '#fff', border: 'none', borderRadius: '8px', padding: '11px 28px', fontWeight: '700', fontSize: '14px', cursor: 'pointer' }}>
+                Save Record
+              </button>
+              <button onClick={() => setShowAdd(false)} style={{ background: 'transparent', color: '#6b7280', border: '1.5px solid #e9d5ff', borderRadius: '8px', padding: '11px 28px', fontSize: '14px', cursor: 'pointer' }}>
+                Cancel
+              </button>
             </div>
           </div>
         )}
 
-        {/* Table + Detail */}
-        <div style={{ display: 'grid', gridTemplateColumns: selected ? '1fr 320px' : '1fr', gap: '16px' }} className="detail-grid">
-          <div style={{ background: '#111', border: '1px solid #222', borderRadius: '8px', overflow: 'hidden' }}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid #222', fontFamily: 'Rajdhani, sans-serif', fontSize: '18px', color: '#C9A84C', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>
+        {/* Table + Detail Panel */}
+        <div style={{ display: 'grid', gridTemplateColumns: selected ? '1fr 340px' : '1fr', gap: '16px' }} className="detail-grid">
+          <div style={{ background: '#fff', border: '1.5px solid #e9d5ff', borderRadius: '12px', overflow: 'hidden' }}>
+            <div style={{ padding: '16px 20px', borderBottom: '1px solid #f3e8ff', fontSize: '16px', fontWeight: '800', color: '#1e0a3c' }}>
               Sales History ({filtered.length} records)
             </div>
-            <div className="table-wrap" style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', minWidth: '700px' }}>
-                <thead>
-                  <tr style={{ background: '#1a1a1a' }}>
-                    {['Product', 'Buyer', 'Phone', 'Buy Date', 'Price', 'Warranty End', 'Status', ''].map(h => (
-                      <th key={h} style={{ padding: '12px 16px', textAlign: 'left', color: '#C9A84C', fontWeight: '600', fontSize: '11px', letterSpacing: '1px', textTransform: 'uppercase', borderBottom: '1px solid #222', whiteSpace: 'nowrap' }}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((r, i) => (
-                    <tr key={r.id} onClick={() => setSelected(selected?.id === r.id ? null : r)}
-                      style={{ borderTop: '1px solid #1a1a1a', background: selected?.id === r.id ? '#1a1500' : i % 2 === 0 ? 'transparent' : '#0d0d0d', cursor: 'pointer' }}>
-                      <td style={{ padding: '12px 16px', color: '#F0EDE8', fontWeight: '500' }}>{r.product}</td>
-                      <td style={{ padding: '12px 16px', color: '#888' }}>{r.buyer}</td>
-                      <td style={{ padding: '12px 16px', color: '#666' }}>{r.phone}</td>
-                      <td style={{ padding: '12px 16px', color: '#666' }}>{r.buyDate}</td>
-                      <td style={{ padding: '12px 16px', color: '#C9A84C', fontWeight: '700', fontFamily: 'Rajdhani, sans-serif' }}>₹{r.price.toLocaleString()}</td>
-                      <td style={{ padding: '12px 16px', color: '#f6ad55' }}>{r.warrantyEnd}</td>
-                      <td style={{ padding: '12px 16px' }}>
-                        <span style={{ background: r.status === 'Delivered' ? 'rgba(56,161,105,0.1)' : 'rgba(246,173,85,0.1)', color: r.status === 'Delivered' ? '#38a169' : '#f6ad55', border: `1px solid ${r.status === 'Delivered' ? 'rgba(56,161,105,0.3)' : 'rgba(246,173,85,0.3)'}`, borderRadius: '20px', padding: '4px 12px', fontSize: '11px' }}>
-                          {r.status === 'Delivered' ? '✅' : '⏳'} {r.status}
-                        </span>
-                      </td>
-                      <td style={{ padding: '12px 16px' }}>
-                        <button onClick={e => { e.stopPropagation(); deleteRecord(r.id) }} style={{ background: 'rgba(229,62,62,0.1)', color: '#e53e3e', border: '1px solid rgba(229,62,62,0.3)', borderRadius: '4px', padding: '5px 10px', fontSize: '11px' }}>🗑️</button>
-                      </td>
+            {loading ? (
+              <div style={{ padding: '40px', textAlign: 'center', color: '#7c3aed', fontWeight: '600' }}>Loading...</div>
+            ) : (
+              <div className="table-wrap" style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', minWidth: '800px' }}>
+                  <thead>
+                    <tr style={{ background: '#f5f3ff' }}>
+                      {['Product', 'Buyer', 'Phone', 'Date', 'Price', 'Warranty', 'Warranty End', 'Status', 'Actions'].map(h => (
+                        <th key={h} style={{ padding: '12px 16px', textAlign: 'left', color: '#581c87', fontWeight: '700', fontSize: '12px', borderBottom: '1.5px solid #e9d5ff', whiteSpace: 'nowrap' }}>{h}</th>
+                      ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {filtered.map((r, i) => (
+                      <tr key={r.id} onClick={() => setSelected(selected?.id === r.id ? null : r)}
+                        style={{ borderTop: '1px solid #f3e8ff', background: selected?.id === r.id ? '#ede9fe' : i % 2 === 0 ? '#fff' : '#faf5ff', cursor: 'pointer' }}>
+                        <td style={{ padding: '12px 16px', color: '#1e0a3c', fontWeight: '600' }}>
+                          {r.product}
+                          <div style={{ fontSize: '10px', color: '#9ca3af' }}>{r.category}</div>
+                        </td>
+                        <td style={{ padding: '12px 16px', color: '#374151' }}>{r.buyerName}</td>
+                        <td style={{ padding: '12px 16px', color: '#6b7280' }}>{r.buyerPhone}</td>
+                        <td style={{ padding: '12px 16px', color: '#6b7280' }}>{r.purchaseDate}</td>
+                        <td style={{ padding: '12px 16px', color: '#581c87', fontWeight: '700' }}>Rs.{r.price?.toLocaleString()}</td>
+                        <td style={{ padding: '12px 16px', color: '#6b7280' }}>{r.warrantyAtPurchase}</td>
+                        <td style={{ padding: '12px 16px' }}>
+                          <span style={{ color: isWarrantyExpired(r.warrantyEndDate) ? '#dc2626' : isWarrantyExpiring(r.warrantyEndDate) ? '#d97706' : '#059669', fontWeight: '600', fontSize: '12px' }}>
+                            {r.warrantyEndDate || '-'}
+                            {isWarrantyExpiring(r.warrantyEndDate) && ' ⚠️'}
+                            {isWarrantyExpired(r.warrantyEndDate) && ' (Expired)'}
+                          </span>
+                        </td>
+                        <td style={{ padding: '12px 16px' }}>
+                          <select value={r.status} onChange={e => { e.stopPropagation(); updateStatus(r.id, e.target.value) }}
+                            onClick={e => e.stopPropagation()}
+                            style={{ background: r.status === 'Delivered' ? '#d1fae5' : r.status === 'Pending' ? '#fef3c7' : '#fee2e2', color: r.status === 'Delivered' ? '#065f46' : r.status === 'Pending' ? '#92400e' : '#991b1b', border: 'none', borderRadius: '6px', padding: '4px 8px', fontSize: '11px', fontWeight: '700', cursor: 'pointer' }}>
+                            <option value="Delivered">Delivered</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Cancelled">Cancelled</option>
+                          </select>
+                        </td>
+                        <td style={{ padding: '12px 16px' }}>
+                          <div style={{ display: 'flex', gap: '6px' }}>
+                            <Link to="/admin/bill" onClick={e => e.stopPropagation()}>
+                              <button style={{ background: '#ede9fe', color: '#7c3aed', border: 'none', borderRadius: '6px', padding: '5px 10px', fontSize: '11px', fontWeight: '600', cursor: 'pointer' }}>Bill</button>
+                            </Link>
+                            <button onClick={e => { e.stopPropagation(); deleteRecord(r.id) }}
+                              style={{ background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: '6px', padding: '5px 10px', fontSize: '11px', fontWeight: '600', cursor: 'pointer' }}>Delete</button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {filtered.length === 0 && !loading && (
+                  <div style={{ padding: '40px', textAlign: 'center', color: '#9ca3af' }}>No records found.</div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Detail Panel */}
           {selected && (
-            <div style={{ background: '#111', border: '1px solid #C9A84C', borderRadius: '8px', padding: '20px', height: 'fit-content' }}>
+            <div style={{ background: '#fff', border: '2px solid #7c3aed', borderRadius: '12px', padding: '20px', height: 'fit-content' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <h3 style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '18px', color: '#C9A84C', textTransform: 'uppercase', letterSpacing: '1px' }}>Full Details</h3>
-                <button onClick={() => setSelected(null)} style={{ background: 'transparent', color: '#555', border: 'none', fontSize: '20px' }}>✕</button>
+                <h3 style={{ fontSize: '16px', fontWeight: '800', color: '#1e0a3c' }}>Full Details</h3>
+                <button onClick={() => setSelected(null)} style={{ background: 'transparent', border: 'none', color: '#9ca3af', fontSize: '20px', cursor: 'pointer' }}>x</button>
               </div>
-              {[
-                ['📦 Product', selected.product],
-                ['🏷️ Category', selected.category],
-                ['👤 Buyer', selected.buyer],
-                ['📞 Phone', selected.phone],
-                ['📅 Buy Date', selected.buyDate],
-                ['💰 Price', `₹${selected.price.toLocaleString()}`],
-                ['📦 In Stock Since', selected.stockDate],
-                ['🛡️ Warranty', selected.warranty],
-                ['⏰ Warranty Until', selected.warrantyEnd],
-                ['🚚 Status', selected.status],
-              ].map(([label, value]) => (
-                <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid #1a1a1a' }}>
-                  <span style={{ fontSize: '12px', color: '#555' }}>{label}</span>
-                  <span style={{ fontSize: '13px', color: '#F0EDE8', fontWeight: '500', textAlign: 'right', maxWidth: '160px' }}>{value}</span>
+
+              {/* Product Info */}
+              <div style={{ background: '#f5f3ff', borderRadius: '8px', padding: '12px', marginBottom: '12px' }}>
+                <div style={{ fontSize: '11px', color: '#7c3aed', fontWeight: '700', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '8px' }}>Product</div>
+                {[
+                  ['Name', selected.product],
+                  ['Category', selected.category],
+                  ['Condition', selected.condition === 'new' ? 'New' : 'Second Hand'],
+                  ['Price Paid', `Rs.${selected.price?.toLocaleString()}`],
+                  ['Payment', selected.paymentMethod],
+                  ['Purchase Date', selected.purchaseDate],
+                ].map(([label, value]) => (
+                  <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderBottom: '1px solid #e9d5ff', fontSize: '12px' }}>
+                    <span style={{ color: '#6b7280' }}>{label}</span>
+                    <span style={{ color: '#1e0a3c', fontWeight: '600', textAlign: 'right', maxWidth: '160px' }}>{value || '-'}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Warranty Info */}
+              <div style={{ background: '#f0fdf4', borderRadius: '8px', padding: '12px', marginBottom: '12px', border: '1px solid #bbf7d0' }}>
+                <div style={{ fontSize: '11px', color: '#059669', fontWeight: '700', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '8px' }}>Warranty</div>
+                {[
+                  ['Warranty Given', selected.warrantyAtPurchase],
+                  ['Total Duration', `${selected.totalWarrantyMonths} months`],
+                  ['Start Date', selected.warrantyStartDate],
+                  ['End Date', selected.warrantyEndDate],
+                  ['Status', isWarrantyExpired(selected.warrantyEndDate) ? 'EXPIRED' : isWarrantyExpiring(selected.warrantyEndDate) ? 'EXPIRING SOON' : 'ACTIVE'],
+                ].map(([label, value]) => (
+                  <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderBottom: '1px solid #bbf7d0', fontSize: '12px' }}>
+                    <span style={{ color: '#6b7280' }}>{label}</span>
+                    <span style={{ color: label === 'Status' ? (isWarrantyExpired(selected.warrantyEndDate) ? '#dc2626' : isWarrantyExpiring(selected.warrantyEndDate) ? '#d97706' : '#059669') : '#1e0a3c', fontWeight: '600', textAlign: 'right' }}>{value || '-'}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Buyer Info */}
+              <div style={{ background: '#eff6ff', borderRadius: '8px', padding: '12px', marginBottom: '12px', border: '1px solid #bfdbfe' }}>
+                <div style={{ fontSize: '11px', color: '#2563eb', fontWeight: '700', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '8px' }}>Buyer</div>
+                {[
+                  ['Name', selected.buyerName],
+                  ['Phone', selected.buyerPhone],
+                  ['Email', selected.buyerEmail],
+                  ['Address', selected.buyerAddress],
+                ].map(([label, value]) => (
+                  <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderBottom: '1px solid #bfdbfe', fontSize: '12px' }}>
+                    <span style={{ color: '#6b7280' }}>{label}</span>
+                    <span style={{ color: '#1e0a3c', fontWeight: '600', textAlign: 'right', maxWidth: '160px' }}>{value || '-'}</span>
+                  </div>
+                ))}
+              </div>
+
+              {selected.notes && (
+                <div style={{ background: '#fef3c7', borderRadius: '8px', padding: '12px', marginBottom: '12px', border: '1px solid #fcd34d' }}>
+                  <div style={{ fontSize: '11px', color: '#92400e', fontWeight: '700', marginBottom: '4px' }}>NOTES</div>
+                  <div style={{ fontSize: '12px', color: '#78350f' }}>{selected.notes}</div>
                 </div>
-              ))}
+              )}
+
               <Link to="/admin/bill">
-                <button style={{ width: '100%', marginTop: '16px', background: '#C9A84C', color: '#000', border: 'none', borderRadius: '6px', padding: '12px', fontWeight: '700', fontSize: '14px', letterSpacing: '0.5px' }}>
-                  🧾 Generate Bill
+                <button style={{ width: '100%', background: '#7c3aed', color: '#fff', border: 'none', borderRadius: '8px', padding: '12px', fontWeight: '700', fontSize: '14px', cursor: 'pointer' }}>
+                  Generate Bill
                 </button>
               </Link>
             </div>
